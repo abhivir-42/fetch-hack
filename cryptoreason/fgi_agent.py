@@ -40,7 +40,13 @@ class FGIResponse(Model):
     timestamp: str
 
 # Initialize Agent
-agent = Agent(name="FGIagent", seed="fgi_agent1_secret_phrase", port=8010)
+agent = Agent(
+    name="FGIagent",
+    port=8010,
+    seed="fgi_agent1_secret_phrase",
+    mailbox = True,
+    endpoint=["http://127.0.0.1:8010/submit"],
+    )
 
 def get_fear_and_greed_index(limit: int = 1) -> FGIResponse:
     """Fetch Fear and Greed index data from CoinMarketCap API"""

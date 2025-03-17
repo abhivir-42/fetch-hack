@@ -19,7 +19,7 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
 sys.excepthook = handle_unexpected_exception
 
 class CoinRequest(Model):
-    coin_id: str
+    blockchain: str
 
 class CoinResponse(Model):
     name: str
@@ -30,14 +30,33 @@ class CoinResponse(Model):
     price_change_24h: float
 
 # Initialize Agent
-agent = Agent(name="CoinInfoAgent", seed="coin_info_agent1_secret_phrase", port=8009)
+agent = Agent(
+    name="CoinInfoAgent",
+    port=8009,
+    seed="coin_info_agent1_secret_phrase",
+    mailbox = True,
+    endpoint=["http://127.0.0.1:8009/submit"],
+    )
 
-def get_crypto_info(coin_id: str) -> CoinResponse:
+def get_crypto_info(blockchain: str) -> CoinResponse:
+    match blockchain:
+        case "ethereum" | "base":  # Both map to "ethereum"
+            coin_id = "ethereum"
+        case "bitcoin":
+            coin_id = "bitcoin"
+        case "matic-network":
+            coin_id = "matic-network"
+        case _:
+            raise ValueError(f"Unsupported blockchain: {blockchain}")  # Handle unexpected inputs
+            #what would happen to the execution in this case?
+        
     """Fetch cryptocurrency information from CoinGecko API"""
+    
     url = f"https://api.coingecko.com/api/v3/coins/{coin_id}"
     
     try:
         response = requests.get(url)
+        logging.info("🚀 URL for {coint_id} received...")
         response.raise_for_status()  # Raises an error for non-200 responses
 
         data = response.json()
@@ -64,9 +83,9 @@ def get_crypto_info(coin_id: str) -> CoinResponse:
 
 async def process_response(ctx: Context, msg: CoinRequest) -> CoinResponse:
     """Process the crypto request and return formatted response"""
-    logging.debug(f"🔄 Fetching crypto data for: {msg.coin_id}")
+    logging.debug(f"🔄 Fetching crypto data for: {msg.blockchain}")
 
-    crypto_data = get_crypto_info(msg.coin_id)
+    crypto_data = get_crypto_info(msg.blockchain)
     
     ctx.logger.info(f"📊 Crypto Info: {crypto_data}")
     return crypto_data
@@ -79,7 +98,7 @@ async def startup(ctx: Context):
 @agent.on_message(model=CoinRequest)
 async def handle_message(ctx: Context, sender: str, msg: CoinRequest):
     """Handle incoming messages requesting crypto information"""
-    ctx.logger.info(f"📩 Received message from {sender}: {msg.coin_id}")
+    ctx.logger.info(f"📩 Received message from {sender}: {msg.blockchain}")
     
     response = await process_response(ctx, msg)
     await ctx.send(sender, response)
@@ -90,5 +109,6 @@ if __name__ == "__main__":
     try:
         logging.info("🚀 Starting the CoinInfoAgent...")
         agent.run()
+        
     except Exception as e:
         logging.error(f"❌ Fatal Error: {e}")
