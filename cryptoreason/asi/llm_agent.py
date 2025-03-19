@@ -24,7 +24,6 @@ agent = Agent(
     name="ASI1 Reasoning agent to sell/buy crypto",
     port=8018,
     seed="LOLOLO lets buy some crypto letsgo",
-    mailbox = True,
     endpoint=["http://127.0.0.1:8018/submit"],
     )
 
@@ -69,7 +68,7 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Request):
         # Send a POST request to the LLM API with the input query
         with requests.post(url, headers=headers, json=data) as response:
             output = response.json()  # Parse the JSON response
-
+            logging.info(f"Output from json: {output}")
             # Extract and return the generated message content
             sendresponse = output["choices"][0]["message"]["content"]
     

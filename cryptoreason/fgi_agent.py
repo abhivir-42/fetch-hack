@@ -44,10 +44,17 @@ agent = Agent(
     name="FGIagent",
     port=8010,
     seed="fgi_agent1_secret_phrase",
-    mailbox = True,
     endpoint=["http://127.0.0.1:8010/submit"],
     )
 
+@agent.on_event("startup")
+async def startup(ctx: Context):
+    """Initialize agent with a test request"""
+    ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
+    #dummy_request = FGIRequest(limit=1)
+    #await process_response(ctx, dummy_request)
+    
+    
 def get_fear_and_greed_index(limit: int = 1) -> FGIResponse:
     """Fetch Fear and Greed index data from CoinMarketCap API"""
     url = "https://pro-api.coinmarketcap.com/v3/fear-and-greed/historical"
@@ -91,6 +98,7 @@ def get_fear_and_greed_index(limit: int = 1) -> FGIResponse:
         logging.error(f"⚠️ API Request Failed: {e}")
         return FGIResponse(data=[], status="error", timestamp=datetime.utcnow().isoformat())
 
+
 async def process_response(ctx: Context, msg: FGIRequest) -> FGIResponse:
     """Process the request and return formatted response"""
     logging.debug("🔄 Processing request...")
@@ -104,22 +112,19 @@ async def process_response(ctx: Context, msg: FGIRequest) -> FGIResponse:
     
     return fear_greed_data
 
-@agent.on_event("startup")
-async def startup(ctx: Context):
-    """Initialize agent with a test request"""
-    ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
-    dummy_request = FGIRequest(limit=1)
-    await process_response(ctx, dummy_request)
 
 @agent.on_message(model=FGIRequest)
 async def handle_message(ctx: Context, sender: str, msg: FGIRequest):
     """Handle incoming messages requesting Fear and Greed index data"""
     ctx.logger.info(f"📩 Received message from {sender}: FGIRequest for {msg.limit} entries")
+    logging.info(f"📩 Received message from {sender}: FGIRequest for {msg.limit} entries")
     
     response = await process_response(ctx, msg)
+    
     await ctx.send(sender, response)
 
     return response
+
 
 if __name__ == "__main__":
     try:

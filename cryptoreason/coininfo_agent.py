@@ -34,7 +34,6 @@ agent = Agent(
     name="CoinInfoAgent",
     port=8009,
     seed="coin_info_agent1_secret_phrase",
-    mailbox = True,
     endpoint=["http://127.0.0.1:8009/submit"],
     )
 

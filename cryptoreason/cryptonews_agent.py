@@ -1,9 +1,14 @@
 import os
 import logging
 import sys
+import json
 import requests
-import atexit
+from datetime import datetime, timezone
+from typing import Optional
 from uagents import Agent, Context, Model
+import atexit
+#pip install newsapi-python
+from newsapi import NewsApiClient
 
 # Configure Logging
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -18,97 +23,86 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
     logging.error("🔥 Uncaught Exception:", exc_info=(exc_type, exc_value, exc_traceback))
 sys.excepthook = handle_unexpected_exception
 
-class CoinRequest(Model):
-    blockchain: str
+# Ensure API key is loaded
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
-class CoinResponse(Model):
-    name: str
-    symbol: str
-    current_price: float
-    market_cap: float
-    total_volume: float
-    price_change_24h: float
+class FearGreedData(Model):
+    value: float
+    value_classification: str
+    timestamp: str
+
+class CryptonewsRequest(Model):
+    limit: Optional[int] = 1
+
+class CryptonewsResponse(Model):
+    cryptoupdates: str
+
 
 # Initialize Agent
 agent = Agent(
-    name="CoinInfoAgent",
-    port=8009,
-    seed="coin_info_agent1_secret_phrase",
+    name="Newsagent",
+    port=8016,
+    seed="newsnewshehhee_agent1_secret_phrase",
     mailbox = True,
-    endpoint=["http://127.0.0.1:8009/submit"],
+    endpoint=["http://127.0.0.1:8016/submit"],
     )
 
-def get_crypto_info(blockchain: str) -> CoinResponse:
-    match blockchain:
-        case "ethereum" | "base":  # Both map to "ethereum"
-            coin_id = "ethereum"
-        case "bitcoin":
-            coin_id = "bitcoin"
-        case "matic-network":
-            coin_id = "matic-network"
-        case _:
-            raise ValueError(f"Unsupported blockchain: {blockchain}")  # Handle unexpected inputs
-            #what would happen to the execution in this case?
-        
-    """Fetch cryptocurrency information from CoinGecko API"""
-    
-    url = f"https://api.coingecko.com/api/v3/coins/{coin_id}"
-    
-    try:
-        response = requests.get(url)
-        logging.info("🚀 URL for {coint_id} received...")
-        response.raise_for_status()  # Raises an error for non-200 responses
-
-        data = response.json()
-        
-        return CoinResponse(
-            name=data['name'],
-            symbol=data['symbol'].upper(),
-            current_price=data['market_data']['current_price']['usd'],
-            market_cap=data['market_data']['market_cap']['usd'],
-            total_volume=data['market_data']['total_volume']['usd'],
-            price_change_24h=data['market_data']['price_change_percentage_24h']
-        )
-    
-    except requests.exceptions.RequestException as e:
-        logging.error(f"⚠️ API Request Failed: {e}")
-        return CoinResponse(
-            name="Unknown",
-            symbol="N/A",
-            current_price=0.0,
-            market_cap=0.0,
-            total_volume=0.0,
-            price_change_24h=0.0
-        )
-
-async def process_response(ctx: Context, msg: CoinRequest) -> CoinResponse:
-    """Process the crypto request and return formatted response"""
-    logging.debug(f"🔄 Fetching crypto data for: {msg.blockchain}")
-
-    crypto_data = get_crypto_info(msg.blockchain)
-    
-    ctx.logger.info(f"📊 Crypto Info: {crypto_data}")
-    return crypto_data
 
 @agent.on_event("startup")
 async def startup(ctx: Context):
-    """Initialize agent with a startup message"""
+    """Initialize agent with a test request"""
     ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
+    #dummy_request = FGIRequest(limit=1)
+    #await process_response(ctx, dummy_request)
 
-@agent.on_message(model=CoinRequest)
-async def handle_message(ctx: Context, sender: str, msg: CoinRequest):
-    """Handle incoming messages requesting crypto information"""
-    ctx.logger.info(f"📩 Received message from {sender}: {msg.blockchain}")
+
+def get_recent_crypto_news(limit: int = 1) -> CryptonewsResponse:
+    """Fetch crypto news data from NewsAPI"""
+    crypto_news=""
+    try:
+        newsapi = NewsApiClient(api_key="94b2d38f6b104eafa2f041bc323ed03c")
+        crypto_news = newsapi.get_everything(q="crypto OR cryptocurrency OR bitcoin OR ethereum OR financial market OR crypto exchange OR bullish OR bearish OR recession OR FOMC", language="en")
+    except Exception as e:
+        logging.error(f"❌ Couldnt connect to NEWS_API: {e}")
+        #response = requests.get(url, headers=headers, params=params)
+        #response.raise_for_status()  # Raises error for non-200 status codes
+        logging.info(f"Found info: {crypto_news}")
+        #raw_data = response.json()
+        #fear_greed_data = []
+
+        #for entry in raw_data.get("data", []):
+        #    data = FearGreedData(
+        #        value=entry["value"],
+        #        value_classification=entry["value_classification"],
+         #       timestamp=entry["timestamp"]
+         #   )
+        #    fear_greed_data.append(data)
+
+        #return FGIResponse(
+        #    data=fear_greed_data,
+        #    status="success",
+        #    timestamp=datetime.utcnow(timezone.utc).isoformat()
+        #)
+        
+    return json.dumps(crypto_news)
+            #status="success",
+            #timestamp=datetime.now(timezone.utc).isoformat()
+        
     
-    response = await process_response(ctx, msg)
-    await ctx.send(sender, response)
 
-    return response
+@agent.on_message(model=CryptonewsRequest)
+async def handle_message(ctx: Context, sender: str, msg: CryptonewsRequest):
+    """Handle incoming messages requesting crypto news data"""
+    logging.info(f"📩 Received message from {sender}: CryptonewsRequest for {msg.limit} entries")
+    
+    response = get_recent_crypto_news(msg.limit)
+    await ctx.send(sender, CryptonewsResponse(cryptoupdates=response))
+
 
 if __name__ == "__main__":
     try:
-        logging.info("🚀 Starting the CoinInfoAgent...")
+        logging.info("🚀 Starting the FGI agent...")
         agent.run()
-        
     except Exception as e:
         logging.error(f"❌ Fatal Error: {e}")
+

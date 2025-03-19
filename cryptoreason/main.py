@@ -21,22 +21,11 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
     logging.error("🔥 Uncaught Exception:", exc_info=(exc_type, exc_value, exc_traceback))
 sys.excepthook = handle_unexpected_exception
 
-# Initialize the agent
-#logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
-agent = Agent(
-    name="SentimentBased CryptoSellAlerts",
-    port=8017,
-    seed="this_is_main_agent_to_run",
-    mailbox = True,
-    endpoint=["http://127.0.0.1:8017/submit"],
-    )
-
-
 # Agentverse agent addresses
 COIN_AGENT="agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq"
 FGI_AGENT="agent1qgzh245lxeaapd32mxlwgdf2607fkt075hymp06rceknjnc2ylznwdv8up7"
 REASON_AGENT="agent1qwlg48h8sstknk7enc2q44227ahq6dr5mjg0p7z62ca6tfueze38kyrtyl2"
-CRYPTONEWS_AGENT=""#add this once registerd
+CRYPTONEWS_AGENT="agent1q2cq0q3cnhccudx6cym8smvpquafsd99lrwexppuecfrnv90xlrs5lsxw6k"#add this once registerd
 
 NETWORK = "bitcoin" #default global
 COININFORMATION = ""
@@ -82,6 +71,15 @@ class FGIResponse(Model):
     status: str
     timestamp: str
 
+# Initialize the agent
+#logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
+agent = Agent(
+    name="SentimentBased CryptoSellAlerts",
+    port=8017,
+    seed="this_is_main_agent_to_run",
+    endpoint=["http://127.0.0.1:8017/submit"],
+    )
+
 
 @agent.on_event("startup")
 async def introduce_agent(ctx: Context):
@@ -126,10 +124,12 @@ async def handle_coin_response(ctx: Context, sender: str, msg: CoinResponse):
 @agent.on_message(model=CryptonewsResponse)
 async def handle_cryptonews_response(ctx: Context, sender: str, msg: CryptonewsResponse):
     """Handles cryptonews market data and requests FGI"""
-    logging.info(f"📩 Received CryptonewsResponse: {msg}")
+    logging.info(f"📩 Received CryptonewsResponse!")
     CRYPTONEWSINFO = msg
+    logging.info(f"📩 Sending request to FGI!")
     try:
-        await ctx.send(FGI_AGENT, FGIRequest()) #need to sent the data from this coin, change within 24 hours!
+        await ctx.send(FGI_AGENT, FGIRequest())
+        logging.info(f"📩 Request to FGI sent!")
     except Exception as e:
         logging.error(f"❌ Error sending FGIRequest: {e}")
 
@@ -152,9 +152,7 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
         sys.exit(1)
             
     # Construct the AI prompt
-    prompt = f'''
-    You are a crypto expert, who is assisting the user to make the most meaningful decisions, to gain the most revenue. Given the following information, respond with either SELL, BUY or HOLD native token from {NETWORK} network.
-    
+    prompt = f'''    
     Consider the following factors:
     
     Fear Greed Index Analysis - {msg}
@@ -162,7 +160,10 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
     User's type of investing - {investor}
     User's risk strategy - {risk}
     
-    Most recent crypto news - {CRYPTONEWS}
+    Most recent crypto news - {CRYPTONEWSINFO}
+    
+    You are a crypto expert, who is assisting the user to make the most meaningful decisions, to gain the most revenue. 
+    Given the following information, respond with one word, either "SELL", "BUY" or "HOLD" native token from {NETWORK} network.
     '''
     
     try:
