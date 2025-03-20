@@ -165,3 +165,21 @@ print(f"New gas balance: {gas_balance / (10 ** 18)} native token")
 
 
 
+
+
+
+![tag:innovationlab](https://img.shields.io/badge/innovationlab-3D8BD3)
+![tag:domain/tag-of-your-agent](https://img.shields.io/badge/domain-colorcode)
+<description>My AI's description of capabilities and offerings</description>
+<use_cases>
+    <use_case>An example of one of your AI's use cases.</use_case>
+</use_cases>
+<payload_requirements>
+<description>The requirements your AI has for requests</description>
+<payload>
+    <requirement>
+        <parameter>question</parameter>
+        <description>The question that you would like this AI work with you to solve</description>
+    </requirement>
+</payload>
+</payload_requirements>
