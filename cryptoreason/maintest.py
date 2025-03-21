@@ -3,7 +3,7 @@ import sys
 import atexit
 from uagents import Agent, Context, Model
 from typing import Optional
-from asi.llm import query_llm
+
 
 #ask for chain the user would like to watch and add to variable chain
 #based on the choise base, ether, or polygon, choose or discover appropriate coin info agent.
@@ -27,9 +27,6 @@ NETWORK = "bitcoin" #default global
 COININFORMATION = ""
 CRYPTONEWSINFO = ""
 ### AGENTVERSE INTERACTION CLASSES ###
-class CoinRequest(Model):
-    blockchain: str
-
 
 
 

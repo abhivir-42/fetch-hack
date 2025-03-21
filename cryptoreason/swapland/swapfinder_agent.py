@@ -8,6 +8,46 @@ import logging
 import os
 from dotenv import load_dotenv
 from uagents import Model
+from fetchai.crypto import Identity
+from uuid import uuid4
+from llm_swapfinder import query_llm
+ 
+def search(query):
+    # Search for agents matching the query
+    available_ais = fetch.ai(query)
+ 
+    # Create sender identity for communication
+    sender_identity = Identity.from_seed("search_sender_identity", 0)
+ 
+    for ai in available_ais.get('ais'):  # Iterate through discovered agents
+ 
+        prompt = f"""
+        you will take the following information: query={query}.
+        You must return a results according to the query"""
+ 
+        completion = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+ 
+        payload = {
+            "Response": completion.choices[0].message.content
+        }
+ 
+        other_addr = ai.get("address", "")  # Get agent's address
+        print(f"Sending a message to an AI agent at address: {other_addr}")
+ 
+        # Send the payload to the discovered agent
+        send_message_to_agent(
+            sender=sender_identity,
+            target=other_addr,
+            payload=payload,
+            session=uuid4(),
+        )
+ 
+    return {"status": "Agent searched"}
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -127,12 +167,64 @@ def webhook():
         agent_response = message.payload
 
         logger.info(f"Processed response: {agent_response}")
+        #how do i parse respons into variables? blockchain, signal, amount
         send_data() #send response status
+        
+        search(agent_response):
+        
         return jsonify({"status": "success"})
 
     except Exception as e:
         logger.error(f"Error in webhook: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+ 
+ #nedd to add asi1 querry
+def search(query):
+    # Search for agents matching the query
+    available_ais = fetch.ai(query)
+ 
+    # Create sender identity for communication
+    sender_identity = client_identity
+ 
+    for ai in available_ais.get('ais'):  # Iterate through discovered agents
+ 
+        # Construct the AI prompt based on current market and sentiment analysis
+        prompt = f'''
+        Given the following information, respond with either SELL or HOLD for the coin {COIN_ID}.
+        
+        Here is a user input containing network:base/ethereum/bitcoin/polygon,amount as float and signal Buy/Sell/Hold.
+        {query}
+        
+        Reply with three words, a string type deciding which "network", a float type - "amount" and a string type "signal" which user intends to execute
+        '''
+        print(prompt)  # Debugging log
+        
+        response = query_llm(prompt)  # Query the AI for a decision
+        
+        print(response)  # Output AI response
+        print()
+     
+        payload = {
+            "Response": completion.choices[0].message.content
+        }
+ 
+        other_addr = ai.get("address", "")  # Get agent's address what is this input ""
+        print(f"Sending a message to an AI agent at address: {other_addr}")
+ 
+ 
+        #next step is to call the right agent based on options received from asi1.
+        # Send the payload to the discovered agent
+        #send_message_to_agent(
+        #    sender=sender_identity,
+        #    target=other_addr,
+        #    payload=payload,
+        #    session=uuid4(),
+        )
+ 
+    return {"status": "Agent searched"}
+
 
 
 if __name__ == "__main__":
