@@ -18,7 +18,6 @@ CORS(app)
 
 # Initialising client identity to get registered on agentverse
 client_identity = None
-agent_response = None
 
 
 class SwaplandRequest(Model):
@@ -39,7 +38,7 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed("jedijidemphraifjowienowkewmm"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmm"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
@@ -87,10 +86,10 @@ def send_data():
 
     try:
         # Parse the request payload
-        data = request.json
-        payload = data.get('payload')  # Extract the payload dictionary
+        #data = request.json
+        payload = {"status": "Successfully request sent to Swapland uAgent!"}#data.get('payload')  # Extract the payload dictionary
 
-        uagent_address = "" #run the uagent.py copy the address and paste here
+        uagent_address = "agent1qfrhxny23vz62v5tr20qnmnjujq8k5t0mxgwdxfap945922t9v4ugqtqkea" #run the uagent.py copy the address and paste here
         
         # Build the Data Model digest for the Request model to ensure message format consistency between the uAgent and AI Agent
         model_digest = Model.build_schema_digest(SwaplandResponse)
@@ -128,6 +127,7 @@ def webhook():
         agent_response = message.payload
 
         logger.info(f"Processed response: {agent_response}")
+        send_data() #send response status
         return jsonify({"status": "success"})
 
     except Exception as e:
