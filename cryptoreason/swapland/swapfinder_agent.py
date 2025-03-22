@@ -8,7 +8,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from uagents import Model
-from fetchai.crypto import Identity
+#from fetchai.crypto import Identity
 from uuid import uuid4
 from llm_swapfinder import query_llm
  
@@ -130,7 +130,7 @@ def webhook():
         #how do i parse respons into variables? blockchain, signal, amount
         send_data() #send response status
         
-        search(agent_response):
+        search(agent_response)
         
         return jsonify({"status": "success"})
 
@@ -144,17 +144,33 @@ def webhook():
 def search(query):
     # Search for agents matching the query
     available_ais = fetch.ai(query)
- 
+    extracted_data = []
+    agents = available_ais.get('ais', [])
+
     # Create sender identity for communication
     sender_identity = client_identity
  
-    for ai in available_ais.get('ais'):  # Iterate through discovered agents
+    #for ai in available_ais.get('ais'):  # Iterate through discovered agents
+    for agent in agents:
     #need to call function with this address
-        other_addr = ai.get("address", "")  # Get agent's address what is this input ""
-        print(f"Sending a message to an AI agent at address: {other_addr}")
+       
+        name = agent.get('name')  # Extract agent name
+        address = agent.get('address')
+        print(f"Discovered agent: {name} :: {address}")
+        # Append formatted data to extracted_data list
+        extracted_data.append({
+            'name': name,
+            'address': address,
+        })
+        response = jsonify(extracted_data)
+        response.headers.add('Content-Type', 'application/json; charset=utf-8')
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        
+        print(f"{response}")
+        #other_addr = ai.get("address", "")  # Get agent's address what is this input ""
+        #print(f"Sending a message to an AI agent at address: {other_addr}")
         #function to send to aiagent
-        
-        
         # Construct the AI prompt based on current market and sentiment analysis
        
 #prompt = f"""
@@ -198,7 +214,7 @@ def search(query):
         #    target=other_addr,
         #    payload=payload,
         #    session=uuid4(),
-        )
+        #)
  
     return {"status": "Agent searched"}
 
