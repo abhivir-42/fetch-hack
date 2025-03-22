@@ -32,7 +32,7 @@ class SwaplandResponse(Model):
     status: str
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv()#this can be removed from here!
 
 
 # Function to register agent
@@ -63,7 +63,6 @@ def init_client():
             </payload_requirements>
         """
         
-
         # Register the agent with Agentverse
         register_with_agentverse(
             identity=client_identity,
@@ -143,7 +142,7 @@ def webhook():
  #nedd to add asi1 querry
 def search(query):
     # Search for agents matching the query
-    available_ais = fetch.ai(query)
+    available_ais = fetch.ai(query) #replace it
     extracted_data = []
     agents = available_ais.get('ais', [])
 

@@ -34,6 +34,136 @@ from eth_defi.uniswap_v3.constants import UNISWAP_V3_DEPLOYMENTS
 from eth_defi.uniswap_v3.deployment import fetch_deployment
 from eth_defi.uniswap_v3.swap import swap_with_slippage_protection
 
+#imports to make it fetachai agent
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from uagents_core.crypto import Identity
+from fetchai import fetch
+from fetchai.registration import register_with_agentverse
+from fetchai.communication import parse_message_from_agent, send_message_to_agent
+import logging
+from dotenv import load_dotenv
+from uuid import uuid4
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
+CORS(app)
+
+# Identity for the agent
+swapper_identity = None
+
+
+
+# Initialize the agent
+def init_agent():
+    global swapper_identity
+    try:
+        swapper_identity = Identity.from_seed("thisisyourdashboardagentphrasefiejijeijpaojpoew", 0) #os.getenv("DASHBOARD_AGENT_KEY"), 0)#DASHBOARD_AGENT_KEY
+        readme = """
+                ![tag:innovationlab](https://img.shields.io/badge/innovationlab-3D8BD3)
+                ![tag:domain/tag-of-your-agent](https://img.shields.io/badge/domain-colorcode)
+                <description>Swapland agent which uses uniswapV3 smart contract to swap ETH into USDC on base network.</description>
+                <use_cases>
+                    <use_case>Receives a value for amount of ETH that needs to be swapped into USDC on base network.</use_case>
+                </use_cases>
+                <payload_requirements>
+                <description>Expects the float number which defines how many ETH needs to be converted into USDC.</description>
+                    <payload>
+                        <requirement>
+                            <parameter>amount</parameter>
+                            <description>Amount of ETH to be converted into USDC.</description>
+                        </requirement>
+                    </payload>
+                </payload_requirements>
+            """
+        register_with_agentverse(
+            identity=swapper_identity,
+            url="http://localhost:5003/api/webhook",
+            agentverse_token=os.getenv("AGENTVERSE_API_KEY"),#"eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE3NTAxOTczNzEsImlhdCI6MTc0MjQyMTM3MSwiaXNzIjoiZmV0Y2guYWkiLCJqdGkiOiI2NzE4ZThmNDkxMjU1YmUwZDEwNTY2NDAiLCJzY29wZSI6ImF2Iiwic3ViIjoiZWZjOGVhNjhkY2JhNWIxNzhlZjFkNDc2ZTE0OTI5MWYzNGMzYzI2OTY5NjQ5NTdjIn0.RIM4DX4oHcXvtN28OPbV1FMVmZKWn6fTJoS_zCdzsZ9JhLF1zFWS2y9K0mulM-q4sI5VOysFphWmYOxJ7JCawDEypBwzusJMgm58dDcIlFjR1j2vQk--zlAEXZo9Qexk5kx-CE3yZeRY8cwQj_eP2NFWYLLmHlqoywr3HgcehknVne7pYz9O4-w4HddnzFH_rgSLPeMEVvIAy8Vs8_9nvKMYuP0Nhkw2m9WHAztI41JTLmsZCErnLQWyFhxUlTh6Xg18vZZ-H2cdsQ7vlOPFJR2eU1zhfE_kDit72OlTy2MWzne9o6UZO-0kDm53AYJuSbSPU9EfrTZo7noagxcX5w",#os.getenv("AGENTVERSE_API_KEY"),
+                    
+                                    
+            agent_title="Swapland agent ETH/USDC (base)",
+            # Define the client agent's metadata
+            readme = """
+                ![tag:innovationlab](https://img.shields.io/badge/innovationlab-3D8BD3)
+                ![tag:domain/tag-of-your-agent](https://img.shields.io/badge/domain-colorcode)
+                <description>Swapland agent which uses uniswapV3 smart contract to swap ETH into USDC on base network.</description>
+                <use_cases>
+                    <use_case>Receives a value for amount of ETH that needs to be swapped into USDC on base network.</use_case>
+                </use_cases>
+                <payload_requirements>
+                <description>Expects the float number which defines how many ETH needs to be converted into USDC.</description>
+                    <payload>
+                        <requirement>
+                            <parameter>amount</parameter>
+                            <description>Amount of ETH to be converted into USDC.</description>
+                        </requirement>
+                    </payload>
+                </payload_requirements>
+            """
+        )
+        logger.info("Swapland agent registered successfully!")
+    except Exception as e:
+        logger.error(f"Error initializing agent: {e}")
+        raise
+
+
+
+
+        """
+            ![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
+            domain:domain-of-your-agent
+
+            <description>This Agent can only receive a message from another agent in string format.</description>
+            <use_cases>
+                <use_case>To receive a message from another agent.</use_case>
+            </use_cases>
+            <payload_requirements>
+            <description>This agent only requires a message in the text format.</description>
+            <payload>
+                <requirement>
+                    <parameter>message</parameter>
+                    <description>The agent can receive any kind of message.</description>
+                </requirement>
+            </payload>
+            </payload_requirements>
+        """
+
+# app route to recieve the messages from other agents
+@app.route('/api/webhook', methods=['POST'])
+def webhook():
+    """Handle incoming messages"""
+    logger.info("Handle incoming messages")
+    
+
+
+
+# Run Flask servers
+if __name__ == "__main__":
+    load_dotenv()
+    init_agent()
+    #print("thisisyouragentphrase") #os.getenv("CLIENT_KEY"))#CLIENT_KEY
+    # Run Flask in a separate thread
+    #app.run(host="0.0.0.0", port=5013)
+    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5003, debug=True, use_reloader=False)).start()
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+
 #QUOTE_TOKEN_ADDRESS we sell
 #BASE_TOKEN_ADDRESS we receive
 
@@ -168,8 +298,7 @@ print(f"New gas balance: {gas_balance / (10 ** 18)} native token")
 
 
 
-![tag:innovationlab](https://img.shields.io/badge/innovationlab-3D8BD3)
-![tag:domain/tag-of-your-agent](https://img.shields.io/badge/domain-colorcode)
+
 <description>My AI's description of capabilities and offerings</description>
 <use_cases>
     <use_case>An example of one of your AI's use cases.</use_case>
@@ -183,3 +312,4 @@ print(f"New gas balance: {gas_balance / (10 ** 18)} native token")
     </requirement>
 </payload>
 </payload_requirements>
+'''
