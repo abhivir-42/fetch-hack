@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36" version="26.1.1">
   <diagram name="Page-1" id="MKXA0fDUGcRWl4akMo9s">
-    <mxGraphModel dx="1594" dy="1131" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1893" dy="1314" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -146,7 +146,7 @@
             <mxPoint x="640" y="770" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="VmUqwLE5IVfGvtFNkpmf-1" value="FEES&lt;div&gt;sent at start&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+        <mxCell id="VmUqwLE5IVfGvtFNkpmf-1" value="send fees to this REWARD agent&lt;div&gt;sent at start&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
           <mxGeometry x="236.5" y="-130" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="VmUqwLE5IVfGvtFNkpmf-2" value="REWARD&lt;div&gt;sent upon request, request sends wallet address&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
@@ -205,6 +205,71 @@
             <mxPoint x="779" y="470" as="sourcePoint" />
             <mxPoint x="779" y="210" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-2" value="TOPUP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="240" y="-220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-3" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="rjRmtGKfGtrBU_hQQWLT-1" target="lRYY8CRCjKX5iyrZZCtr-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="150" y="-30" as="sourcePoint" />
+            <mxPoint x="227" y="-190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-4" value="maintest" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="200" y="1300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-5" value="swapfinder" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="430" y="1470" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-6" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" target="lRYY8CRCjKX5iyrZZCtr-5" source="lRYY8CRCjKX5iyrZZCtr-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="1260" as="sourcePoint" />
+            <mxPoint x="400" y="1560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-7" value="ethereum&lt;div&gt;WETH/USDC&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="750" y="1460" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-8" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;endWidth=42;endSize=14;width=31;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="1501.5" as="sourcePoint" />
+            <mxPoint x="730" y="1502" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-9" value="DISCOVERY" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="lRYY8CRCjKX5iyrZZCtr-8">
+          <mxGeometry x="-0.4729" y="-1" relative="1" as="geometry">
+            <mxPoint x="14" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-10" value="GET_FUNDS" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="410" y="1250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-11" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="lRYY8CRCjKX5iyrZZCtr-4" target="lRYY8CRCjKX5iyrZZCtr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="1160" as="sourcePoint" />
+            <mxPoint x="417" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-12" value="Testnet funds, then should send funds from FET wallet to top up the agent at the start of the program" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="270" y="1100" width="560" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-13" value="need to finish testing search agent function" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="355" y="1408" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-15" value="need to discover fetch ai agent SDK , then adapt uniswap code to agent" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="625" y="1408" width="410" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-16" value="once received should store that transaction" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="365" y="-150" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-17" value="same as FEES agent, receives request. if FEES transaction is stored, sends out the reward" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="95" y="438" width="510" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-18" value="need to improve reasoning" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="500" y="180" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-20" value="tops up Fet wallet of main agent" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="265" y="-262" width="190" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -136,7 +136,7 @@ async def handle_cryptonews_response(ctx: Context, sender: str, msg: CryptonewsR
 
 @agent.on_message(model=FGIResponse)
 async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
-    """Analyzes FGI data and determines whether to issue a SELL alert."""
+    """Analyzes FGI data and determines whether to issue a SELL/BUY or HOLD alert."""
     logging.info(f"📊 Received FGIResponse: {msg}")
 
     print(f"Please, confirm if you long-term or short-term investor?")
@@ -150,6 +150,9 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
     if ((risk != "conservative") and (risk != "balanced")and (risk != "aggressive")and (risk != "speculative")):
         print("Aborted")
         sys.exit(1)
+       
+    #need to add this to ASI1 LLM!
+    userreason = input("Any particular reason why you would like to perform Buy/Sell/Hold action? ").lower()
             
     # Construct the AI prompt
     prompt = f'''    

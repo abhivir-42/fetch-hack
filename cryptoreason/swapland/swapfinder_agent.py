@@ -11,6 +11,7 @@ from uagents import Model
 #from fetchai.crypto import Identity
 from uuid import uuid4
 from llm_swapfinder import query_llm
+import requests
  
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -34,7 +35,6 @@ class SwaplandResponse(Model):
 # Load environment variables from .env file
 load_dotenv()#this can be removed from here!
 
-
 # Function to register agent
 def init_client():
     """Initialize and register the client agent."""
@@ -45,8 +45,7 @@ def init_client():
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
-            ![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
-            domain:domain-of-your-agent
+![domain:swapland](https://img.shields.io/badge/swapland-finder)
 
             <description>This Agent can only receive a message from another agent in string format.</description>
             <use_cases>
@@ -66,7 +65,7 @@ def init_client():
         # Register the agent with Agentverse
         register_with_agentverse(
             identity=client_identity,
-            url="http://localhost:5002/api/webhook",
+            url="http://localhost:5003/api/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),
             agent_title="Swapland finder agent",
             readme=readme
@@ -142,7 +141,44 @@ def webhook():
  #nedd to add asi1 querry
 def search(query):
     # Search for agents matching the query
-    available_ais = fetch.ai(query) #replace it
+    # API endpoint and payload
+    api_url = "https://agentverse.ai/v1/search/agents"
+    payload = {
+        "search_text": "uniswapV3 smart contract to swap ETH into USDC",#'<query>',
+        "sort": "relevancy",
+        "direction": "asc",
+        "offset": 0,
+        "limit": 20,
+    }
+
+    # Make a POST request to the API
+    discovery = requests.post(api_url, json=payload)
+
+    # Check if the request was successful
+    if discovery.status_code == 200:
+        # Parse the JSON response
+        data = discovery.json()
+        agents = data.get("agents", [])
+        print("Formatted API Response:")
+        for agent in agents:
+            print("-" * 100)
+            print("Agent Name:", agent.get("name"))
+            print("Agent Address:", agent.get("address"))
+            print("Readme:", agent.get("readme"))
+    else:
+        print(f"Request failed with status code {response.status_code}")
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+        """
+    available_ais = fetch.ai(query) #replace it since it only find agents which follows certain protocol.
     extracted_data = []
     agents = available_ais.get('ais', [])
 
@@ -167,6 +203,9 @@ def search(query):
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
         
         print(f"{response}")
+        
+        
+        """
         #other_addr = ai.get("address", "")  # Get agent's address what is this input ""
         #print(f"Sending a message to an AI agent at address: {other_addr}")
         #function to send to aiagent
@@ -222,4 +261,4 @@ def search(query):
 if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
-    app.run(host="0.0.0.0", port=5002)
+    app.run(host="0.0.0.0", port=5003)

@@ -59,33 +59,34 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmm"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnnnkk"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
-
         readme = """
-            ![tag:base](https://img.shields.io/badge/base-)
-            
-            <description>Swapland agent which uses uniswapV3 smart contract to swap ETH into USDC on base network.</description>
-            <use_cases>
-                <use_case>Receives a value for amount of ETH that needs to be swapped into USDC on base network.</use_case>
-            </use_cases>
-            <payload_requirements>
-            <description>Expects the float number which defines how many ETH needs to be converted into USDC.</description>
-                <payload>
-                    <requirement>
-                        <parameter>amount</parameter>
-                        <description>Amount of ETH to be converted into USDC.</description>
-                    </requirement>
-                </payload>
-            </payload_requirements>
-        """
+![tag:swapland](https://img.shields.io/badge/swapland-base)
+
+<description>Swapland agent which uses uniswapV3 smart contract to swap ETH into USDC on base network.</description>
+<use_cases>
+    <use_case>Receives a value for amount of ETH that needs to be swapped into USDC on base network.</use_case>
+</use_cases>
+
+<payload_requirements>
+<description>Expects the float number which defines how many ETH needs to be converted into USDC.</description>
+    <payload>
+          <requirement>
+              <parameter>amount</parameter>
+              <description>Amount of ETH to be converted into USDC.</description>
+          </requirement>
+    </payload>
+</payload_requirements>
+"""
+
         
         # Register the agent with Agentverse
         register_with_agentverse(
             identity=client_identity,
             url="http://localhost:5002/api/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),
-            agent_title="Swapland finder agent",
+            agent_title="Swapland ETH to USDC base agent",
             readme=readme
         )
 
@@ -122,7 +123,7 @@ def webhook():
         #how do i parse respons into variables? blockchain, signal, amount
         send_data() #send response status
         
-        search(agent_response)
+        #search(agent_response)
         
         return jsonify({"status": "success"})
 
