@@ -38,7 +38,6 @@ analytics_identity = None
 graphs = []
 
 # Initialize OpenAI API key
-openai.api_key = "" #os.getenv("OPENAI_API_KEY")#OPENAI_API_KEY
 
 # Function to generate visualization suggestions on given dataframe and number of suggestions
 def get_visualization_suggestions(dataframe, num_suggestions):
