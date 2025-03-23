@@ -24,7 +24,7 @@ sys.excepthook = handle_unexpected_exception
 SWAPLAND_AGENT="agent1qv9phv30v8gpm9r4cwk0djhuzdvsa7rdzm2k5tnefmdu76mp92l9zuqeexs"
 TOPUP_AGENT="agent1qw0zrryt8fme4svuldt4vx5m929gwtx9vxxhustkxd4dh2gyp4fp2lw8cme"
 
-NETWORK = "bitcoin" #default global
+NETWORK = "base" #default global
 COININFORMATION = ""
 CRYPTONEWSINFO = ""
 ### AGENTVERSE INTERACTION CLASSES ###
@@ -72,10 +72,11 @@ async def swapland_request(ctx: Context):
         topupamount = input("How many FET to transfer over?: ").lower()#convert from string to float
         fetchwall= (str)(agent.wallet.address())
         amoun = 23.0
-        await ctx.send(TOPUP_AGENT, TopupRequest(amount=amoun, wal=fetchwall))
+        #all works, temporary disabled to test further
+        #await ctx.send(TOPUP_AGENT, TopupRequest(amount=amoun, wal=fetchwall))
     
     try:
-        chain = "base"
+        chain = NETWORK
         amountt = 1.0
         signall = "Buy"
         await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))

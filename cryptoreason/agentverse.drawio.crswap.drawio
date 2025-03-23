@@ -174,7 +174,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="cKEoqrwd5DOWBhyRoy2k-3" value="AGENTVERSE_&lt;div&gt;API&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
-          <mxGeometry x="470" y="370" width="105" height="70" as="geometry" />
+          <mxGeometry x="410" y="360" width="105" height="70" as="geometry" />
         </mxCell>
         <mxCell id="cKEoqrwd5DOWBhyRoy2k-4" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.029;entryY=0.371;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="rjRmtGKfGtrBU_hQQWLT-4" target="cKEoqrwd5DOWBhyRoy2k-3" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -262,14 +262,35 @@
         <mxCell id="lRYY8CRCjKX5iyrZZCtr-16" value="once received should store that transaction" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="365" y="-150" width="250" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="lRYY8CRCjKX5iyrZZCtr-17" value="same as FEES agent, receives request. if FEES transaction is stored, sends out the reward" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="95" y="438" width="510" height="30" as="geometry" />
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-17" value="same as receiving fee agent, receives request. if FEES transaction is stored, sends out the reward" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="0.5" y="440" width="550" height="30" as="geometry" />
         </mxCell>
         <mxCell id="lRYY8CRCjKX5iyrZZCtr-18" value="need to improve reasoning" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="500" y="180" width="170" height="30" as="geometry" />
         </mxCell>
         <mxCell id="lRYY8CRCjKX5iyrZZCtr-20" value="tops up Fet wallet of main agent" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="265" y="-262" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-21" value="EMAIL" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="240" y="620" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-23" value="send email confirmation of the transaction?&amp;nbsp;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="380" y="635" width="260" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-24" value="HEARTBEAT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="240" y="710" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-25" value="receive data from your heart beat to determine that your decisions are not emotional" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="380" y="725" width="470" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-27" value="TOKEN&lt;div&gt;smart contract&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lRYY8CRCjKX5iyrZZCtr-28" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="VmUqwLE5IVfGvtFNkpmf-2" target="lRYY8CRCjKX5iyrZZCtr-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500.5" y="515" as="sourcePoint" />
+            <mxPoint x="550.5" y="465" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
