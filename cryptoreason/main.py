@@ -3,7 +3,7 @@ import sys
 import atexit
 from uagents import Agent, Context, Model
 from typing import Optional
-from asi.llm import query_llm
+#from asi.llm_agent import query_llm
 
 #ask for chain the user would like to watch and add to variable chain
 #based on the choise base, ether, or polygon, choose or discover appropriate coin info agent.
@@ -101,6 +101,7 @@ async def check_coin(ctx: Context):
             print("Aborted")
             sys.exit(1)
         
+        #global NETWORK
         NETWORK = chain
         
         await ctx.send(COIN_AGENT, CoinRequest(blockchain=chain))
@@ -114,6 +115,9 @@ async def check_coin(ctx: Context):
 async def handle_coin_response(ctx: Context, sender: str, msg: CoinResponse):
     """Handles coin market data and requests Cryptonews."""
     logging.info(f"📩 Received CoinResponse: {msg}")
+    
+    #global COININFORMATION
+    
     COININFORMATION = msg
     try:
         await ctx.send(CRYPTONEWS_AGENT, CryptonewsRequest()) #need to sent the data from this coin, change within 24 hours!
@@ -125,6 +129,9 @@ async def handle_coin_response(ctx: Context, sender: str, msg: CoinResponse):
 async def handle_cryptonews_response(ctx: Context, sender: str, msg: CryptonewsResponse):
     """Handles cryptonews market data and requests FGI"""
     logging.info(f"📩 Received CryptonewsResponse!")
+    
+    #global CRYPTONEWSINFO
+    
     CRYPTONEWSINFO = msg
     logging.info(f"📩 Sending request to FGI!")
     try:
@@ -154,6 +161,7 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
     #need to add this to ASI1 LLM!
     userreason = input("Any particular reason why you would like to perform Buy/Sell/Hold action? ").lower()
             
+    # i need to add user thoughts to this prompt + heartrate + explain the model to ASI1 + perhaps integrate graph feature?  can we feed in the links?
     # Construct the AI prompt
     prompt = f'''    
     Consider the following factors:

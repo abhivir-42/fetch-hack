@@ -21,10 +21,10 @@ account = web3.eth.account.from_key(PRIVATE_KEY)
 wallet_address = account.address
 
 # Uniswap V3 Router Contract on Base
-UNISWAP_ROUTER_ADDRESS = "0x6fF5693b99212Da76ad316178A184AB56D299b43"
+UNISWAP_ROUTER_ADDRESS = "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af"# Use your deployed contract address here uniswap v4 base  ETH to USDC
 
 # Load ABI
-with open("uniswap_router_abi.json", "r") as f:
+with open("baseethusdc_abi.json", "r") as f:
     UNISWAP_ROUTER_ABI = json.load(f)
 
 router_contract = web3.eth.contract(address=UNISWAP_ROUTER_ADDRESS, abi=UNISWAP_ROUTER_ABI)
@@ -36,7 +36,7 @@ WETH_ADDRESS = "0x4200000000000000000000000000000000000006"
 def swap_eth_for_usdc(amount_eth, amount_out_min):
     """Swap ETH for USDC using Uniswap V3 on Base"""
 
-    commands = "0x0b0004"  # WRAP_ETH -> V3_SWAP_EXACT_IN -> PAY_PORTIONno -> SWEEP
+    commands = "0x100604"  # WRAP_ETH -> V3_SWAP_EXACT_IN -> PAY_PORTIONno -> SWEEP
     amount_eth_wei = web3.to_wei(amount_eth, "ether")
     amount_out_min_wei = web3.to_wei(amount_out_min, "ether")
 
