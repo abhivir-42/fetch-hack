@@ -62,7 +62,7 @@ trx_params = {
 raw_transaction = w3.eth.account.sign_transaction(trx_params, account.key).rawTransaction
 trx_hash = w3.eth.send_raw_transaction(raw_transaction)
 print(f"Trx Hash: {w3.to_hex(trx_hash)}")
-
+print(f"Successfully converted from ETH to USDC.")
 #uni_contract = w3.eth.contract(address=uni_address, abi=uni_abi)
 #uni_balance = uni_contract.functions.balanceOf(account.address).call()
 
