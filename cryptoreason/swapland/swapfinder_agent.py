@@ -72,7 +72,7 @@ def init_client():
         )
 
         logger.info("Quickstart agent registration complete!")
-        search("something") #test
+        search("BUY, ETH, Base") #test
     except Exception as e:
         logger.error(f"Initialization error: {e}")
         raise
@@ -161,7 +161,7 @@ def search(query):
         agents = data.get("agents", [])
         print("Formatted API Response:")
         prompt = f'''
-        These are all agents found through the search agent function using "{query}" and {payload}. Analyse all of the agents in the list and find the most suitable and output its agent address.
+        These are all agents found through the search agent function using givent information: "{query}" and {payload}. Analyse all of the agents in the list and find the most suitable and output its agent address.
         Each agent has 3 parameters to consider: name, address and readme. Evaluate them all.
         
         Agents discovered:

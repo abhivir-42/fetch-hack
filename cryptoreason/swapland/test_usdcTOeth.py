@@ -47,22 +47,22 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnnnkk"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnhhiugcynnkk"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
-![tag:swapland](https://img.shields.io/badge/swaplandbaseethusdc)
+![tag:swapland](https://img.shields.io/badge/swaplandbaseusdceth)
 
-<description>Swapland agent which uses uniswapV3 smart contract to swap ETH into USDC on base network.</description>
+<description>Swapland agent which uses uniswapV2 smart contract to BUY ETH (swap USDC into ETH) on base network.</description>
 <use_cases>
-    <use_case>Receives a value for amount of ETH that needs to be swapped into USDC on base network.</use_case>
+    <use_case>Receives a value for amount of USDC that needs to be swapped into ETH on base network.</use_case>
 </use_cases>
 
 <payload_requirements>
-<description>Expects the float number which defines how many ETH needs to be converted into USDC.</description>
+<description>Expects the float number which defines how many USDC needs to be converted into ETH.</description>
     <payload>
           <requirement>
               <parameter>amount</parameter>
-              <description>Amount of ETH to be converted into USDC.</description>
+              <description>Amount of USDC to be converted into ETH.</description>
           </requirement>
     </payload>
 </payload_requirements>
@@ -72,7 +72,7 @@ def init_client():
         # Register the agent with Agentverse
         register_with_agentverse(
             identity=client_identity,
-            url="http://localhost:5002/api/webhook",
+            url="http://localhost:5004/api/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),
             agent_title="Swapland ETH to USDC base agent",
             readme=readme
@@ -110,9 +110,7 @@ def webhook():
         logger.info(f"Processed response: {agent_response}")
         #how do i parse respons into variables? blockchain, signal, amount
         send_data() #send response status
-        
-        #search(agent_response)
-        
+                
         return jsonify({"status": "success"})
 
     except Exception as e:
@@ -124,4 +122,4 @@ if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
     #app.run(host="0.0.0.0", port=5002)
-    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5002, debug=True, use_reloader=False)).start()
+    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5004, debug=True, use_reloader=False)).start()
