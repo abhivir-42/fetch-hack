@@ -4,6 +4,9 @@ import atexit
 from uagents import Agent, Context, Model
 from typing import Optional
 
+from uagents.network import wait_for_tx_to_complete
+from uagents.setup import fund_agent_if_low
+
 
 #ask for chain the user would like to watch and add to variable chain
 #based on the choise base, ether, or polygon, choose or discover appropriate coin info agent.
@@ -29,6 +32,18 @@ COININFORMATION = ""
 CRYPTONEWSINFO = ""
 ### AGENTVERSE INTERACTION CLASSES ###
 
+### REWARD AGENT ###
+class PaymentRequest(Model):
+    wallet_address: str
+    amount: int
+    denom: str
+ 
+class TransactionInfo(Model):
+    tx_hash: str
+
+class PaymentInquiry(Model):
+    ready: str
+###--------------###
 
 class TopupRequest(Model):
     amount: float
@@ -76,14 +91,23 @@ async def swapland_request(ctx: Context):
         #await ctx.send(TOPUP_AGENT, TopupRequest(amount=amoun, wal=fetchwall))
     
     try:
+        await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
+        print(f"Ready status sent")
+    except Exception as e:
+        logging.error(f"Failed to send request to Reward Agent: {e}")
+    
+    
+    try:
         chain = NETWORK
         amountt = 1.0
         signall = "Buy"
-        await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))
+        #all works, temporary disabled to test further
+        #await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))
         print(f"Sent request") #stuck here
 
     except Exception as e:
         logging.error(f"Failed to send request: {e}")
+        
 
 # Handle incoming messages with the SwaplandResponse model from ai agent
 @agent.on_message(model=SwaplandResponse)
@@ -101,6 +125,19 @@ async def response_funds(ctx: Context, sender: str, msg: TopupResponse):
     except Exception as e:
         logging.error(f"❌ Error sending CryptonewsRequest: {e}")
 
+
+@agent.on_message(model=PaymentRequest)
+async def message_handler(ctx: Context, sender: str, msg: PaymentRequest):
+    ctx.logger.info(f"Received message from {sender}: {msg}")
+    #send the payment
+    rewardtopay = input("You are required to pay {msg.amount} FET for this service. Proceed?[yes/no]: ").lower()
+    if (rewardtopay == "yes"):
+        transaction = ctx.ledger.send_tokens(msg.wallet_address, msg.amount, msg.denom,agent.wallet)
+    else:
+        exit(1)
+ 
+    # send the tx hash so reward agent can confirm
+    await ctx.send(ctx.agent.address, TransactionInfo(tx_hash=transaction.tx_hash))
 
 
 
