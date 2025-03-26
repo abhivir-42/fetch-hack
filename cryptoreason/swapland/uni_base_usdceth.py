@@ -134,7 +134,7 @@ print("signable_message:", signable_message)
 
 
 # Swap parameters
-amount_in = 1 * 10**6  # 1 USDC
+amount_in = 2 * 10**5  # 1 USDC 1 * 10**6 ,,, this should take .20 USDC
 min_amount_out = 1 * 10**12  # 0.00001 ETH (18 decimals, ~$2.50 at $2,500/ETH)
 path = [usdc_address, weth_address]  # USDC → WETH
 fee = 3000  # 0.3% fee tier for V3 pool
