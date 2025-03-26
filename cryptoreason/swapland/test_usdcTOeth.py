@@ -50,7 +50,7 @@ def init_client():
         client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnhhiugcynnkk"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
-![tag:swapland](https://img.shields.io/badge/swaplandbaseusdceth)
+![tag:swapland](https://img.shields.io/badge/swaplandbaseusdceth-1)
 
 <description>Swapland agent which uses uniswapV2 smart contract to BUY ETH (swap USDC into ETH) on base network.</description>
 <use_cases>

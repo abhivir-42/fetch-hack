@@ -45,7 +45,7 @@ def init_client():
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
-![tag:swapland](https://img.shields.io/badge/swapland)
+![tag:swapland](https://img.shields.io/badge/swapland-master)
 
             <description>This Agent can only receive a message from another agent in string format.</description>
             <use_cases>
