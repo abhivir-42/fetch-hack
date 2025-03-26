@@ -16,7 +16,7 @@ class TransactionInfo(Model):
 
 class PaymentInquiry(Model):
     ready: str
-    wallet: str
+    wallet: str #ctx.agent.wallet.address()
 
 
 AMOUNT = 100
@@ -52,9 +52,7 @@ async def send_payment(ctx: Context, sender: str, msg: PaymentRequest):
     ctx.logger.info(f"Received payment request from {sender}: {msg}")
  
     # send the payment
-    transaction = ctx.ledger.send_tokens(
-        msg.wallet_address, msg.amount, msg.denom, bob.wallet
-    )
+    transaction = ctx.ledger.send_tokens(ctx.agent.wallet.address(), msg.amount, msg.denom,bob.wallet)
  
     # send the tx hash so alice can confirm
     await ctx.send(alice.address, TransactionInfo(tx_hash=transaction.tx_hash))
@@ -70,9 +68,7 @@ async def send_payment(ctx: Context, sender: str, msg: PaymentRequest):
 async def send_payment(ctx: Context, sender: str, msg: PaymentRequest):
     ctx.logger.info(f"Received payment request from {sender}: {msg}")
  
-    await ctx.send(sender,PaymentRequest(
-            wallet_address=msg.wallet, amount=AMOUNT, denom=DENOM),
-    )
+    await ctx.send(sender,PaymentRequest(wallet_address=ctx.agent.wallet.address(), amount=AMOUNT, denom=DENOM))
 
 
 @reward.on_message(model=TransactionInfo)
@@ -82,13 +78,13 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
  
     coin_received = tx_resp.events["coin_received"]
     if (
-            coin_received["receiver"] == str(alice.wallet.address())
+            coin_received["receiver"] == str(ctx.agent.wallet.address())
             and coin_received["amount"] == f"{AMOUNT}{DENOM}"
     ):
     ctx.logger.info(f"Transaction was successful: {coin_received}")
     
     local_ledger = {"agent_address":ctx.address, "tx":msg.tx_hash}
-    ctx.storage.set("{msg.wallet}", local_ledger)
+    ctx.storage.set("{ctx.agent.wallet.address()}", local_ledger)
 
     #ctx.logger.info(ctx.storage.get("Passkey"))
 

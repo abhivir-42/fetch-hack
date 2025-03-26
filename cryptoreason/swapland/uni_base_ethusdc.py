@@ -12,7 +12,6 @@ import os
 
 private_key = os.getenv("METAMASK_PRIVATE_KEY")
 
-# Ethereum fork with Ganache at block number = 17365005
 chain_id = 8453
 rpc_endpoint = "https://mainnet.base.org"
 

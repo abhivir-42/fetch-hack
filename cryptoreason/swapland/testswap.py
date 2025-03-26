@@ -3,18 +3,6 @@ import decimal
 import sys
 from decimal import Decimal
 
-from eth_account import Account
-from eth_account.signers.local import LocalAccount
-from web3 import Web3
-
-from eth_defi.provider.multi_provider import create_multi_provider_web3
-from eth_defi.revert_reason import fetch_transaction_revert_reason
-from eth_defi.token import fetch_erc20_details
-from eth_defi.confirmation import wait_transactions_to_complete
-from eth_defi.uniswap_v3.constants import UNISWAP_V3_DEPLOYMENTS
-from eth_defi.uniswap_v3.deployment import fetch_deployment
-from eth_defi.uniswap_v3.swap import swap_with_slippage_protection
-
 from threading import Thread
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -62,7 +50,7 @@ def init_client():
         client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnnnkk"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
-![tag:swapland](https://img.shields.io/badge/swapland-base)
+![tag:swapland](https://img.shields.io/badge/swaplandbaseethusdc)
 
 <description>Swapland agent which uses uniswapV3 smart contract to swap ETH into USDC on base network.</description>
 <use_cases>

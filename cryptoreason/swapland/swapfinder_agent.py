@@ -45,7 +45,7 @@ def init_client():
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
-![domain:swapland](https://img.shields.io/badge/swapland-finder)
+![tag:swapland](https://img.shields.io/badge/swapland)
 
             <description>This Agent can only receive a message from another agent in string format.</description>
             <use_cases>
@@ -72,7 +72,7 @@ def init_client():
         )
 
         logger.info("Quickstart agent registration complete!")
-
+        search("something") #test
     except Exception as e:
         logger.error(f"Initialization error: {e}")
         raise
@@ -128,7 +128,7 @@ def webhook():
         #how do i parse respons into variables? blockchain, signal, amount
         send_data() #send response status
         
-        search(agent_response)
+        #search(agent_response) #debug
         
         return jsonify({"status": "success"})
 
@@ -144,11 +144,11 @@ def search(query):
     # API endpoint and payload
     api_url = "https://agentverse.ai/v1/search/agents"
     payload = {
-        "search_text": "uniswapV3 smart contract to swap ETH into USDC",#'<query>',
+        "search_text": "swapland",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
         "sort": "relevancy",
         "direction": "asc",
         "offset": 0,
-        "limit": 20,
+        "limit": 5,
     }
 
     # Make a POST request to the API
@@ -160,100 +160,44 @@ def search(query):
         data = discovery.json()
         agents = data.get("agents", [])
         print("Formatted API Response:")
+        prompt = f'''
+        These are all agents found through the search agent function using "{query}" and {payload}. Analyse all of the agents in the list and find the most suitable and output its agent address.
+        Each agent has 3 parameters to consider: name, address and readme. Evaluate them all.
+        
+        Agents discovered:
+        '''
         for agent in agents:
             print("-" * 100)
             print("Agent Name:", agent.get("name"))
             print("Agent Address:", agent.get("address"))
             print("Readme:", agent.get("readme"))
+            
+
+            prompt += f'''
+            Agent Name: {agent.get("name")}
+            Agent Address: {agent.get("address")}
+            Readme: {agent.get("readme")}
+            {"-" * 50}
+            '''
+            print(prompt)
+
+        #print(prompt)  # Debugging log
+        print("Request sent to ASI1 model to evaluate the list of discovered agents..")
+        response = query_llm(prompt)  # Query the AI for a decision
+        
+        print(response)  # Output AI response
+        print()
+
+        # Interpret the AI response and print SELL or HOLD decision
+        #if "SELL" in response:
+        #    print("SELL")
+        #else:
+        #    print("NOTHING")
+        print("Program completed")
+            
     else:
         print(f"Request failed with status code {response.status_code}")
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-        """
-    available_ais = fetch.ai(query) #replace it since it only find agents which follows certain protocol.
-    extracted_data = []
-    agents = available_ais.get('ais', [])
-
-    # Create sender identity for communication
-    sender_identity = client_identity
- 
-    #for ai in available_ais.get('ais'):  # Iterate through discovered agents
-    for agent in agents:
-    #need to call function with this address
-       
-        name = agent.get('name')  # Extract agent name
-        address = agent.get('address')
-        print(f"Discovered agent: {name} :: {address}")
-        # Append formatted data to extracted_data list
-        extracted_data.append({
-            'name': name,
-            'address': address,
-        })
-        response = jsonify(extracted_data)
-        response.headers.add('Content-Type', 'application/json; charset=utf-8')
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        
-        print(f"{response}")
-        
-        
-        """
-        #other_addr = ai.get("address", "")  # Get agent's address what is this input ""
-        #print(f"Sending a message to an AI agent at address: {other_addr}")
-        #function to send to aiagent
-        # Construct the AI prompt based on current market and sentiment analysis
-       
-#prompt = f"""
-#you will take the following information: query={query}.
-#You must return a results according to the query"""
- 
-
-#print(prompt)  # Debugging log
-        
-        #the idea of chat gpt is to build up a playload which then sent to appropriate agent. i could use llm prompt to give the answer in a playload. i need to figure out which playload i need to send to the swap agent.
-        
-        #completion = client.chat.completions.create(
-        #    model="gpt-4o",
-        #    messages=[
-        #        {"role": "user", "content": prompt}
-        #    ]
-        #)
-#response = query_llm(prompt)  # Query the AI for a decision
-        
-#print(response)  # Output AI response
-#print()
-     
-        #payload = {
-        #    "Response": response#completion.choices[0].message.content
-        #}
- 
-        
-        #once agent discovered that swaps via uniswap, we can proceed with swap!
-#other_addr = ai.get("address", "")  # Get agent's address what is this input ""
-#print(f"Sending a message to an AI agent at address: {other_addr}")
- 
-        #NOW i just need to take this address and call function to send request to ai agent
-        
-        
-        
-        
-        #next step is to call the right agent based on options received from asi1.
-        # Send the payload to the discovered agent
-        #send_message_to_agent(
-        #    sender=sender_identity,
-        #    target=other_addr,
-        #    payload=payload,
-        #    session=uuid4(),
-        #)
- 
     return {"status": "Agent searched"}
 
 

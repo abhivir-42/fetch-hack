@@ -61,9 +61,9 @@ async def request_funds(ctx: Context, sender: str, msg: TopupRequest):
     faucet: FaucetApi = get_faucet()
     logging.info(f"📩 Sender wallet address received: {msg.wal}")
 
-    sender_balance = ledger.query_bank_balance(Address(msg.wal))
+    sender_balance = ledger.query_bank_balance(Address(ctx.agent.wallet.address()))#ctx.agent.wallet.address()
     ctx.logger.info({sender_balance})
-    faucet.get_wealth(msg.wal)
+    faucet.get_wealth(ctx.agent.wallet.address())#ctx.agent.wallet.address() msg.wal can be removed from the class
     sender_balance = ledger.query_bank_balance(Address(msg.wal))
     logging.info(f"📩 After funds received: {sender_balance}")
     #ctx.logger.info({sender_balance})
