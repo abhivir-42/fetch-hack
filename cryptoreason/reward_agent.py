@@ -34,7 +34,8 @@ class PaymentReceived(Model):
 
 AMOUNT = 1000000000000000000
 DENOM = "atestfet"
- 
+#DENOM = "afet"
+
 reward = Agent(name="reward", seed="reward secret phrase agent oekwpfokw", port=8008, endpoint=["http://127.0.0.1:8008/submit"])
  
 fund_agent_if_low(reward.wallet.address(), min_balance=AMOUNT)
