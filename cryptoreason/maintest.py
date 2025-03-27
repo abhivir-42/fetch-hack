@@ -58,7 +58,7 @@ class PaymentReceived(Model):
 
 class TopupRequest(Model):
     amount: float
-    wal: str
+    #wal: str
 
 class TopupResponse(Model):
     status: str
