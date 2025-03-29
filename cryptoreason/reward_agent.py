@@ -115,7 +115,7 @@ def stakystake():
     faucet: FaucetApi = get_faucet()
     agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))
     converted_balance = agent_balance/1000000000000000000
-    #faucet.get_wealth(farmer.wallet.address())
+    faucet.get_wealth(farmer.wallet.address())
     ctx.logger.info(f"Received: {converted_balance} TESTFET")
     #ctx.logger.info({agent_balance})
     
@@ -135,8 +135,6 @@ def stakystake():
     # delegate some tokens to this validator
     tx = ledger_client.delegate_tokens(validator.address, agent_balance, reward.wallet)
     tx.wait_to_complete()
-    #then call function to stake
-    #my_wallet = LocalWallet.from_unsafe_seed("registration test wallet")
     ctx.logger.info("Delegation completed.")
     summary = ledger_client.query_staking_summary(reward.wallet.address())
     totalstaked = summary.total_staked/1000000000000000000

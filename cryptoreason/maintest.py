@@ -12,6 +12,11 @@ from cosmpy.aerial.faucet import FaucetApi
 from cosmpy.crypto.address import Address
 
 from uagents.network import get_faucet, get_ledger
+from uagents.agent import AgentRepresentation #to use txn wallet
+from uagents.config import TESTNET_REGISTRATION_FEE
+
+from cosmpy.aerial.config import NetworkConfig
+from cosmpy.aerial.wallet import LocalWallet
 
 
 
@@ -134,7 +139,7 @@ async def response_funds(ctx: Context, sender: str, msg: TopupResponse):
     logging.info(f"📩 Received Topup request: {msg.status}")
     #COININFORMATION = msg
     try:
-        await ctx.send(sender, TopupResponse()) #need to sent the data from this coin, change within 24 hours!
+        await ctx.send(sender, TopupResponse())
     except Exception as e:
         logging.error(f"❌ Error sending CryptonewsRequest: {e}")
 

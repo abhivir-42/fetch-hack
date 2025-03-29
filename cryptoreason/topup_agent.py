@@ -1,32 +1,26 @@
- 
-from uagents.setup import fund_agent_if_low
-from uagents import Agent, Context, Protocol, Model
+from uagents import Agent, Context, Protocol, Model, Field
 import random
 import logging
-from uagents import Field
 from uagents.agent import AgentRepresentation #to use txn wallet
+from uagents.setup import fund_agent_if_low
 
 #from ai_engine import UAgentResponse, UAgentResponseType
 import sys
-
 
 from logging import Logger
 
 from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.faucet import FaucetApi
 from cosmpy.crypto.address import Address
+from cosmpy.aerial.config import NetworkConfig
+from cosmpy.aerial.wallet import LocalWallet
 
 from uagents.config import TESTNET_REGISTRATION_FEE
 from uagents.network import get_faucet, get_ledger
 from uagents.utils import get_logger
 
-
 import argparse
 import time
-
-from cosmpy.aerial.config import NetworkConfig
-from cosmpy.aerial.wallet import LocalWallet
-
 
 
 
@@ -52,6 +46,7 @@ fund_agent_if_low(farmer.wallet.address())
 async def introduce_agent(ctx: Context):
     ctx.logger.info(farmer.address)
     ctx.logger.info(farmer.wallet.address())
+    
 
  
  #need to add some pause before starting
@@ -61,7 +56,7 @@ async def get_faucet_farmer(ctx: Context):
     faucet: FaucetApi = get_faucet()
     agent_balance = ledger.query_bank_balance(Address(farmer.wallet.address()))
     converted_balance = agent_balance/1000000000000000000
-    #faucet.get_wealth(farmer.wallet.address())
+    ##faucet.get_wealth(farmer.wallet.address())
     print(f"Received: {converted_balance} TESTFET")
     #ctx.logger.info({agent_balance})
     
@@ -79,11 +74,10 @@ async def get_faucet_farmer(ctx: Context):
     #ctx.logger.info({farmer_wallet})
     
     # delegate some tokens to this validator
-    #tx = ledger_client.delegate_tokens(validator.address, agent_balance, farmer.wallet)
-    #tx.wait_to_complete()
+    ##tx = ledger_client.delegate_tokens(validator.address, agent_balance, farmer.wallet)
+    ##tx.wait_to_complete()
     
     #then call function to stake
-    #my_wallet = LocalWallet.from_unsafe_seed("registration test wallet")
     ctx.logger.info("Delegation completed.")
     summary = ledger_client.query_staking_summary(farmer.wallet.address())
     totalstaked = summary.total_staked/1000000000000000000
@@ -110,14 +104,22 @@ async def get_faucet_farmer(ctx: Context):
 async def request_funds(ctx: Context, sender: str, msg: TopupRequest):
     """Handles topup requests Topup."""
     
+    fund_agent_if_low(farmer.wallet.address())
+    
     ledger: LedgerClient = get_ledger()
     faucet: FaucetApi = get_faucet()
-    logging.info(f"📩 Sender wallet address received: {msg.wal}")
+    #print(f"📩 Sender wallet address received: {ctx.agent.wallet.address() }")
+    #logging.info(f"📩 Sender wallet address received: {ctx.agent.wallet.address()}")
 
-    sender_balance = ledger.query_bank_balance(Address(ctx.agent.wallet.address()))/1000000000000000000#ctx.agent.wallet.address()
+    sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/1000000000000000000#ctx.agent.wallet.address()
     ctx.logger.info({sender_balance})
-    faucet.get_wealth(ctx.agent.wallet.address())#ctx.agent.wallet.address() msg.wal can be removed from the class
-    sender_balance = ledger.query_bank_balance(Address(ctx.agent.wallet.address()))/1000000000000000000
+    ##faucet.get_wealth(ctx.agent.wallet.address())#ctx.agent.wallet.address() msg.wal can be removed from the class
+    amo = 500000000000000000 #0.5 TESTFET
+    deno = 'atestfet'
+    
+    transaction = ctx.ledger.send_tokens("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf", amo, deno,farmer.wallet)
+    
+    sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/1000000000000000000
     logging.info(f"📩 After funds received: {sender_balance}")
     #ctx.logger.info({sender_balance})
     
