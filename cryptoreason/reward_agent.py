@@ -55,12 +55,13 @@ fund_agent_if_low(reward.wallet.address(), min_balance=AMOUNT)
 async def introduce_agent(ctx: Context):
     """Logs agent startup details."""
     logging.info(f"✅ Agent started: {ctx.agent.address}")
-    print(f"Hello! I'm {reward.name} and my address is {reward.address}, my wallet address {reward.wallet.address()} ")
+    ctx.logger.info(f"MHello! I'm {reward.name} and my address is {reward.address}, my wallet address {reward.wallet.address()} ")
+
     logging.info("🚀 Agent startup complete.")
     ledger: LedgerClient = get_ledger()
     agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))/1000000000000000000
-    print(f"My balance is {agent_balance} TESTFET")
-    
+    ctx.logger.info(f"My balance is {agent_balance} TESTFET")
+
     
 @reward.on_message(model=PaymentInquiry)
 async def send_payment(ctx: Context, sender: str, msg: PaymentInquiry):
@@ -85,10 +86,10 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
 
     ledger: LedgerClient = get_ledger()
     agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))/1000000000000000000
-    print(f"Balance after fees: {agent_balance} TESTFET")
-    
+    ctx.logger.info(f"Balance after fees: {agent_balance} TESTFET")
+
     #storage to verify for reward
-    local_ledger = {"agent_address":reward.address, "tx":msg.tx_hash}
+    local_ledger = {"agent_address":sender, "tx":msg.tx_hash}
     ctx.storage.set("{ctx.agent.wallet.address()}", local_ledger)
     
     await ctx.send(sender,PaymentReceived(status="success"))#str(ctx.agent.address)
@@ -98,10 +99,16 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
 
 @reward.on_message(model=RewardRequest)
 async def request_reward(ctx: Context, sender: str, msg: RewardRequest):
-    ctx.logger.info(ctx.storage.get("{ctx.address}"))
-    #now i need jsonify it?
-    #what is the difference between ctx: Context and sender:str ; ctx.address?
-
+    fund_agent_if_low(reward.wallet.address(), min_balance=AMOUNT)
+    check = ctx.storage.get("{ctx.agent.wallet.address()}")
+    if (check.agent_address == sender):
+        await ctx.send(sender,PaymentRequest(wallet_address=str(reward.wallet.address()), amount=1000000000000000000, denom=DENOM))#send the reward
+        ctx.logger.info(f"Reward has been issued!")
+        ctx.storage.remove("{ctx.agent.wallet.address()}")
+    else:
+        ctx.logger.info(f"Transaction not found!")
+    #how do i delete the stora variable?
+    
 
 def stakystake():
     ledger: LedgerClient = get_ledger()
@@ -109,7 +116,7 @@ def stakystake():
     agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))
     converted_balance = agent_balance/1000000000000000000
     #faucet.get_wealth(farmer.wallet.address())
-    print(f"Received: {converted_balance} TESTFET")
+    ctx.logger.info(f"Received: {converted_balance} TESTFET")
     #ctx.logger.info({agent_balance})
     
     #staking letsgooo
@@ -133,7 +140,7 @@ def stakystake():
     ctx.logger.info("Delegation completed.")
     summary = ledger_client.query_staking_summary(reward.wallet.address())
     totalstaked = summary.total_staked/1000000000000000000
-    print(f"Staked: {totalstaked} TESTFET")
+    ctx.logger.info(f"Staked: {totalstaked} TESTFET")
 
  
 if __name__ == "__main__":

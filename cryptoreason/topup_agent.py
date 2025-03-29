@@ -41,7 +41,7 @@ class TopupResponse(Model):
 farmer = Agent(
     name="Farmer agent faucet collector",
     port=8001,
-    seed="kjpopoFJpwjofemwffreSTRgkgjkkjkjINGS",
+    seed="kjpopoFJpwjofemwffrekfkkssfbrSTRgkfobgnh98hjio38j398902098f89ehf978jijoevm90werw8u0gjkkjkjINGS",
     endpoint=["http://localhost:8001/submit"],#remove this to hide
 )
 
@@ -55,13 +55,13 @@ async def introduce_agent(ctx: Context):
 
  
  #need to add some pause before starting
-@farmer.on_interval(0.1)
+@farmer.on_interval(5)
 async def get_faucet_farmer(ctx: Context):
     ledger: LedgerClient = get_ledger()
     faucet: FaucetApi = get_faucet()
     agent_balance = ledger.query_bank_balance(Address(farmer.wallet.address()))
     converted_balance = agent_balance/1000000000000000000
-    faucet.get_wealth(farmer.wallet.address())
+    #faucet.get_wealth(farmer.wallet.address())
     print(f"Received: {converted_balance} TESTFET")
     #ctx.logger.info({agent_balance})
     
@@ -79,8 +79,9 @@ async def get_faucet_farmer(ctx: Context):
     #ctx.logger.info({farmer_wallet})
     
     # delegate some tokens to this validator
-    tx = ledger_client.delegate_tokens(validator.address, agent_balance, farmer.wallet)
-    tx.wait_to_complete()
+    #tx = ledger_client.delegate_tokens(validator.address, agent_balance, farmer.wallet)
+    #tx.wait_to_complete()
+    
     #then call function to stake
     #my_wallet = LocalWallet.from_unsafe_seed("registration test wallet")
     ctx.logger.info("Delegation completed.")

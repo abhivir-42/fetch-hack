@@ -32,7 +32,7 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
 sys.excepthook = handle_unexpected_exception
 
 SWAPLAND_AGENT="agent1qv9phv30v8gpm9r4cwk0djhuzdvsa7rdzm2k5tnefmdu76mp92l9zuqeexs"
-TOPUP_AGENT="agent1qw0zrryt8fme4svuldt4vx5m929gwtx9vxxhustkxd4dh2gyp4fp2lw8cme"
+TOPUP_AGENT="agent1q02xdwqwthtv6yeawrpcgpyvh8a002ueeynnltu8n6gxq0hlh8qu7ep5uhu"
 REWARD_AGENT="agent1qde8udnttat2mmq3srkrz60wm3248yg43528wy2guwyewtesd73z7x3swru"
 
 NETWORK = "base" #default global
@@ -85,11 +85,13 @@ agent = Agent(
 async def introduce_agent(ctx: Context):
     """Logs agent startup details."""
     logging.info(f"✅ Agent started: {ctx.agent.address}")
-    print(f"Hello! I'm {agent.name} and my address is {agent.address}, my wallet address {agent.wallet.address()} ")
+    #print(f"Hello! I'm {agent.name} and my address is {agent.address}, my wallet address {agent.wallet.address()} ")
+    ctx.logger.info(f"Hello! I'm {agent.name} and my address is {agent.address}, my wallet address {agent.wallet.address()}")
     logging.info("🚀 Agent startup complete.")
     ledger: LedgerClient = get_ledger()
     agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/1000000000000000000
-    print(f"My balance is {agent_balance} TESTFET")
+    ctx.logger.info(f"My balance is {agent_balance} TESTFET")
+
 
 @agent.on_interval(period=24 * 60 * 60.0)  # Runs every 24 hours
 async def swapland_request(ctx: Context):
@@ -99,13 +101,11 @@ async def swapland_request(ctx: Context):
     if (topupwallet == "yes"):
         topupamount = input("How many FET to transfer over?: ").lower()#convert from string to float
         fetchwall= (str)(agent.wallet.address())
-        amoun = 23.0
-        #all works, temporary disabled to test further
-        #await ctx.send(TOPUP_AGENT, TopupRequest(amount=amoun, wal=fetchwall))
+        await ctx.send(TOPUP_AGENT, TopupRequest(amount=topupamount, wal=fetchwall))
     
     try:
         await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
-        print(f"Ready status sent")
+        ctx.logger.info(f"Ready status sent")
     except Exception as e:
         logging.error(f"Failed to send request to Reward Agent: {e}")
     
@@ -160,7 +160,8 @@ async def message_handler(ctx: Context, sender: str, msg: PaymentReceived):
         ctx.logger.info(f"Payment transaction successful!")
         ledger: LedgerClient = get_ledger()
         agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/1000000000000000000
-        print(f"Balance after fees: {agent_balance} TESTFET")
+        #print(f"Balance after fees: {agent_balance} TESTFET")
+        ctx.logger.info(f"Balance after fees: {agent_balance} TESTFET")
     else:
         ctx.logger.info(f"Payment transaction unsuccessful!")
         exit(1)
