@@ -71,15 +71,16 @@ class FGIResponse(Model):
     status: str
     timestamp: str
 
-counter_asi = 5
-risk = " "
-investor = " "
+ASIITERATIONS = 6
+RISK = " "
+INVESTOR = " "
+FGIOUTPUT = " "
 
 # Initialize the agent
 #logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
 agent = Agent(
     name="SentimentBased CryptoSellAlerts",
-    port=8017,
+    port=8001,
     seed="this_is_main_agent_to_run",
     endpoint=["http://127.0.0.1:8017/submit"],
     )
@@ -98,15 +99,13 @@ async def check_coin(ctx: Context):
     """Requests market data for the monitored coin once a day."""
     try:
         # Confirm chain
+        global NETWORK
         print(f"Please, confirm the chain to request the data from")
-        chain = input("Blockchain [ethereum/base/bitcoin/matic-network]? ").lower()
+        NETWORK = input("Blockchain [ethereum/base/bitcoin/matic-network]? ").lower()
         
-        if ((chain != "base") and (chain != "ethereum") and (chain != "matic-network") and (chain != "bitcoin")):
+        if ((NETWORK != "base") and (NETWORK != "ethereum") and (NETWORK != "matic-network") and (NETWORK != "bitcoin")):
             print("Aborted")
             sys.exit(1)
-        
-        #global NETWORK
-        NETWORK = chain
         
         await ctx.send(COIN_AGENT, CoinRequest(blockchain=chain))
         print(f"Sent request") #stuck here
@@ -120,7 +119,7 @@ async def handle_coin_response(ctx: Context, sender: str, msg: CoinResponse):
     """Handles coin market data and requests Cryptonews."""
     logging.info(f"📩 Received CoinResponse: {msg}")
     
-    #global COININFORMATION
+    global COININFORMATION
     
     COININFORMATION = msg
     try:
@@ -134,7 +133,7 @@ async def handle_cryptonews_response(ctx: Context, sender: str, msg: CryptonewsR
     """Handles cryptonews market data and requests FGI"""
     logging.info(f"📩 Received CryptonewsResponse!")
     
-    #global CRYPTONEWSINFO
+    global CRYPTONEWSINFO
     
     CRYPTONEWSINFO = msg
     logging.info(f"📩 Sending request to FGI!")
@@ -149,34 +148,40 @@ async def handle_cryptonews_response(ctx: Context, sender: str, msg: CryptonewsR
 async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
     """Analyzes FGI data and determines whether to issue a SELL/BUY or HOLD alert."""
     logging.info(f"📊 Received FGIResponse: {msg}")
-    global investor
-    global risk
+    global INVESTOR
+    global RISK
+    global USERREASON
+    global FGIOUTPUT
+    
+    FGIOUTPUT = msg
     
     print(f"Please, confirm if you long-term or short-term investor?")
-    investor = input("Investor [long-term/short-term/speculate]: ").lower()
-    if ((investor != "long-term") and (investor != "short-term") and (investor != "speculate")):
+    INVESTOR = input("Investor [long-term/short-term/speculate]: ").lower()
+    if ((INVESTOR != "long-term") and (INVESTOR != "short-term") and (INVESTOR != "speculate")):
         print("Aborted")
         sys.exit(1)
         
     print(f"Please, confirm your risk strategy for investments?")
-    risk = input("Risk strategy [conservative/balanced/aggressive/speculative]: ").lower()
-    if ((risk != "conservative") and (risk != "balanced")and (risk != "aggressive")and (risk != "speculative")):
+    RISK = input("Risk strategy [conservative/balanced/aggressive/speculative]: ").lower()
+    if ((RISK != "conservative") and (RISK != "balanced")and (RISK != "aggressive")and (RISK != "speculative")):
         print("Aborted")
         sys.exit(1)
        
     #need to add this to ASI1 LLM!
-    userreason = input("Any particular reason why you would like to perform Buy/Sell/Hold action? ").lower()
+    USERREASON = input("Any particular reason why you would like to perform Buy/Sell/Hold action? ").lower()
             
     # i need to add user thoughts to this prompt + heartrate + explain the model to ASI1 + perhaps integrate graph feature?  can we feed in the links?
     # Construct the AI prompt
     prompt = f'''    
     Consider the following factors:
     
-    Fear Greed Index Analysis - {msg}
+    Fear Greed Index Analysis - {FGIOUTPUT}
     Coin Market Data - {COININFORMATION}
     Blockchain network - {NETWORK}
-    User's type of investing - {investor}
-    User's risk strategy - {risk}
+    User's type of investing - {INVESTOR}
+    User's risk strategy - {RISK}
+    
+    User's opinion - {USERREASON}
     
     Most recent crypto news - {CRYPTONEWSINFO}
     
@@ -196,21 +201,23 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
 
 @agent.on_message(model=ASI1Response)
 async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
-    global counter_asi
-    counter_asi = counter_asi - 1
+    global ASIITERATIONS
+    ASIITERATIONS = ASIITERATIONS - 1
     logging.info(f"✅ ASI1 Agent {counter_asi} finished reasoning: {msg.decision}")
     
-    if(counter_asi > 1):
+    if(ASIITERATIONS > 1):
         prompt = f'''    
         Consider the following factors:
         
-        Fear Greed Index Analysis - {msg}
+        Fear Greed Index Analysis - {FGIOUTPUT}
         Coin Market Data - {COININFORMATION}
         Blockchain network - {NETWORK}
-        User's type of investing - {investor}
-        User's risk strategy - {risk}
+        User's type of investing - {INVESTOR}
+        User's risk strategy - {RISK}
         
         Most recent crypto news - {CRYPTONEWSINFO}
+        
+        User's opinion - {USERREASON}
         
         You are a crypto expert, who is assisting the user to make the most meaningful decisions, to gain the most revenue. 
         
@@ -222,28 +229,30 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
         await ctx.send(REASON_AGENT, ASI1Request(query=prompt))
 
     
-    if(counter_asi == 1):
+    if(ASIITERATIONS == 1):
         prompt = f'''    
         Consider the following factors:
         
-        Fear Greed Index Analysis - {msg}
+        Fear Greed Index Analysis - {FGIOUTPUT}
         Coin Market Data - {COININFORMATION}
         Blockchain network - {NETWORK}
-        User's type of investing - {investor}
-        User's risk strategy - {risk}
+        User's type of investing - {INVESTOR}
+        User's risk strategy - {RISK}
         
         Most recent crypto news - {CRYPTONEWSINFO}
         
+        User's opinion - {USERREASON}   
+        
         You are an independent expert of a crypto market with knowledge of how worldwide politis affects the cryptomarket. You are assisting the user to make the most meaningful decisions, to gain the most revenue whilst minimising potential losses. 
         
-        This query has been analysed by other crypto experts with the following reasoning:
+        This query has been analysed by {ASIITERATIONS} other crypto experts, and here is a summery of their reasoning:
         "{msg.decision}"
         
-        Given the following information and reasoning from other expert, respond with a single word decision of either "SELL", "BUY" or "HOLD" a native token from given network.
+        Given the following information and reasoning from other expert, respond with a single word decision of either "SELL", "BUY" or "HOLD" signal for a native token from given network.
         '''
         await ctx.send(REASON_AGENT, ASI1Request(query=prompt))
     
-    if (counter_asi == 0):
+    if (ASIITERATIONS == 0):
         if "SELL" in msg.decision:
             logging.critical("🚨 SELL SIGNAL DETECTED!")
             print("SELL")

@@ -64,13 +64,15 @@ async def introduce_agent(ctx: Context):
     ctx.logger.info(f"My balance is {agent_balance} TESTFET")
     
     
-    local_ledger = {"agent_address":"this is my address", "tx":"transaction0409283"}
-    ctx.storage.set("1331331", local_ledger)
     
-    check = ctx.storage.get("{ctx.agent.wallet.address()}")
-    ctx.logger.info(f"My check is {check}")
     
-    ctx.storage.remove("1331331")
+    #local_ledger = {"agent_address":"this is my address", "tx":"transaction0409283"}
+    #ctx.storage.set("1331331", local_ledger)
+    #check = ctx.storage.get("1331331")
+    #ctx.logger.info(f"My check is {check['agent_address']}")
+    #ctx.storage.remove("1331331")
+    #check = ctx.storage.get("1331331")
+    #ctx.logger.info(f"My check is {check} after removal")
 
     
 @reward.on_message(model=PaymentInquiry)
@@ -100,7 +102,7 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
 
     #storage to verify for reward
     local_ledger = {"agent_address":sender, "tx":msg.tx_hash}
-    ctx.storage.set("{ctx.agent.wallet.address()}", local_ledger)
+    ctx.storage.set("{ctx.agent.address}", local_ledger)#{ctx.agent.wallet.address()}
     
     await ctx.send(sender,PaymentReceived(status="success"))#str(ctx.agent.address)
     #ctx.logger.info(ctx.storage.get("Passkey"))
@@ -110,14 +112,14 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
 @reward.on_message(model=RewardRequest)
 async def request_reward(ctx: Context, sender: str, msg: RewardRequest):
     fund_agent_if_low(reward.wallet.address(), min_balance=AMOUNT)
-    check = ctx.storage.get("{ctx.agent.wallet.address()}")
-    if (check.agent_address == sender):
+    check = ctx.storage.get("{ctx.agent.address}")
+    if (check['agent_address'] == sender):
         await ctx.send(sender,PaymentRequest(wallet_address=str(reward.wallet.address()), amount=REWARD, denom=DENOM))#send the reward
         ctx.logger.info(f"Reward has been issued!")
-        ctx.storage.remove("{ctx.agent.wallet.address()}")
+        ctx.storage.remove("ctx.agent.address")#{ctx.agent.wallet.address()}
+        ctx.logger.info(f"Reward storage cleared")
     else:
         ctx.logger.info(f"Transaction not found!")
-    #how do i delete the stora variable?
     
 
 def stakystake():

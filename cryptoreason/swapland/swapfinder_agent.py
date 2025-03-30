@@ -12,6 +12,7 @@ from uagents import Model
 from uuid import uuid4
 from llm_swapfinder import query_llm
 import requests
+
  
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -72,7 +73,11 @@ def init_client():
         )
 
         logger.info("Quickstart agent registration complete!")
-        search("BUY, ETH, Base") #test
+        
+        #debug
+        #search("BUY, ETH, Base") #test
+        call_swap("agent1qgl5kptpr3x2t2fnuxnnyf5e8rum8n7u9ett0lv6pqd00k302d72gcygy32", "12346key")
+        
     except Exception as e:
         logger.error(f"Initialization error: {e}")
         raise
@@ -110,7 +115,6 @@ def send_data():
         return jsonify({"error": str(e)}), 500
 
 
-
 # app route to recieve the messages from other agents
 @app.route('/api/webhook', methods=['POST'])
 def webhook():
@@ -137,8 +141,6 @@ def webhook():
         return jsonify({"error": str(e)}), 500
 
 
- 
- #nedd to add asi1 querry
 def search(query):
     # Search for agents matching the query
     # API endpoint and payload
@@ -161,9 +163,9 @@ def search(query):
         agents = data.get("agents", [])
         print("Formatted API Response:")
         prompt = f'''
-        These are all agents found through the search agent function using givent information: "{query}" and {payload}. Analyse all of the agents in the list and find the most suitable and output its agent address.
+        These are all agents found through the search agent function using givent information: "{query}" and {payload}.
         Each agent has 3 parameters to consider: name, address and readme. Evaluate them all.
-        
+        Analyse all of the agents in the list and find the most suitable and output its agent address.
         Agents discovered:
         '''
         for agent in agents:
@@ -186,19 +188,55 @@ def search(query):
         response = query_llm(prompt)  # Query the AI for a decision
         
         print(response)  # Output AI response
-        print()
-
-        # Interpret the AI response and print SELL or HOLD decision
-        #if "SELL" in response:
-        #    print("SELL")
-        #else:
-        #    print("NOTHING")
+        #call_swap(str(response,metamask_key))
+        
         print("Program completed")
             
     else:
         print(f"Request failed with status code {response.status_code}")
 
     return {"status": "Agent searched"}
+
+
+
+
+
+
+
+
+#@app.route('/api/call-swap', methods=['POST'])
+def call_swap(swapaddress : str, metamask_key : str):
+   """Send payload to the selected agent based on provided address."""
+
+   try:
+       # Parse the request payload
+       #data = request.json
+       payload = {
+        "variable": "swapland something",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
+        "metamask_key": metamask_key,
+        }#data.get('payload')  # Extract the payload dictionary
+        
+       agent_address = swapaddress
+       logger.info(f"Sending payload to agent: {swapaddress}")
+       #logger.info(f"Payload: {payload}")
+
+       # Send the payload to the specified agent
+       send_message_to_agent(
+           client_identity,  # Frontend client identity
+           agent_address,    # Agent address where we have to send the data
+           payload           # Payload containing the data
+       )
+
+       #return jsonify({"status": "request_sent", "agent_address": agent_address, "payload": payload})#"payload": payload}
+
+   except Exception as e:
+       logger.error(f"Error sending data to agent: {e}")
+       return jsonify({"error": str(e)}), 500
+
+
+
+
+
 
 
 

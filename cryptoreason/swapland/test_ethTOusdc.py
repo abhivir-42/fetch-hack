@@ -1,3 +1,5 @@
+# agent address agent1qgl5kptpr3x2t2fnuxnnyf5e8rum8n7u9ett0lv6pqd00k302d72gcygy32
+
 import datetime
 import decimal
 import sys
@@ -72,7 +74,7 @@ def init_client():
         # Register the agent with Agentverse
         register_with_agentverse(
             identity=client_identity,
-            url="http://localhost:5002/api/webhook",
+            url="http://localhost:5012/api/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),
             agent_title="Swapland ETH to USDC base agent",
             readme=readme
@@ -83,15 +85,6 @@ def init_client():
     except Exception as e:
         logger.error(f"Initialization error: {e}")
         raise
-
-
-#send to uAgent
-@flask_app.route('/request', methods=['POST'])
-def send_data():
-    """Send payload to the selected agent based on provided address."""
-    global agent_response
-    agent_response = None
-
 
 
 # app route to recieve the messages from other agents
@@ -105,11 +98,12 @@ def webhook():
         logger.info("Received response")
 
         message = parse_message_from_agent(data)
-        agent_response = message.payload
+        agent_response = message.payload['metamask_key']
 
         logger.info(f"Processed response: {agent_response}")
+        #logger.info(f"Processed metamask key: {metamask_response}")
         #how do i parse respons into variables? blockchain, signal, amount
-        send_data() #send response status
+        #send_data() #send response status
                 
         return jsonify({"status": "success"})
 
@@ -122,4 +116,4 @@ if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
     #app.run(host="0.0.0.0", port=5002)
-    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5002, debug=True, use_reloader=False)).start()
+    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5012, debug=True, use_reloader=False)).start()
