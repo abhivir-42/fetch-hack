@@ -1,4 +1,4 @@
-#pip install uniswap-universal-router-decoder==0.8.0 web3==6.4.0
+#pip install uniswap-universal-router-decoder web3
 
 # Uniswap V2 Router Contract on Base
 #USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"

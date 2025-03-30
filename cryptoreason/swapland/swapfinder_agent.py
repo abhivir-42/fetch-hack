@@ -14,6 +14,8 @@ from llm_swapfinder import query_llm
 import requests
 
  
+private_key = os.getenv("METAMASK_PRIVATE_KEY")
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -76,7 +78,7 @@ def init_client():
         
         #debug
         #search("BUY, ETH, Base") #test
-        call_swap("agent1qgl5kptpr3x2t2fnuxnnyf5e8rum8n7u9ett0lv6pqd00k302d72gcygy32", "12346key")
+        call_swap("agent1qgl5kptpr3x2t2fnuxnnyf5e8rum8n7u9ett0lv6pqd00k302d72gcygy32", private_key)
         
     except Exception as e:
         logger.error(f"Initialization error: {e}")
@@ -210,15 +212,13 @@ def call_swap(swapaddress : str, metamask_key : str):
 
    try:
        # Parse the request payload
-       #data = request.json
        payload = {
         "variable": "swapland something",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
         "metamask_key": metamask_key,
-        }#data.get('payload')  # Extract the payload dictionary
+        }
         
        agent_address = swapaddress
        logger.info(f"Sending payload to agent: {swapaddress}")
-       #logger.info(f"Payload: {payload}")
 
        # Send the payload to the specified agent
        send_message_to_agent(
@@ -226,8 +226,6 @@ def call_swap(swapaddress : str, metamask_key : str):
            agent_address,    # Agent address where we have to send the data
            payload           # Payload containing the data
        )
-
-       #return jsonify({"status": "request_sent", "agent_address": agent_address, "payload": payload})#"payload": payload}
 
    except Exception as e:
        logger.error(f"Error sending data to agent: {e}")
