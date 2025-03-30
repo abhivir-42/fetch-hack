@@ -41,9 +41,9 @@ class CryptonewsResponse(Model):
 # Initialize Agent
 agent = Agent(
     name="Newsagent",
-    port=8016,
+    port=8005,
     seed="newsnewshehhee_agent1_secret_phrase",
-    endpoint=["http://127.0.0.1:8016/submit"],
+    endpoint=["http://127.0.0.1:8005/submit"],
     )
 
 

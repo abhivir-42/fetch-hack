@@ -65,7 +65,7 @@ def init_client():
         # Register the agent with Agentverse
         register_with_agentverse(
             identity=client_identity,
-            url="http://localhost:5003/api/webhook",
+            url="http://localhost:5008/api/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),
             agent_title="Swapland finder agent",
             readme=readme
@@ -205,4 +205,4 @@ def search(query):
 if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
-    app.run(host="0.0.0.0", port=5003)
+    app.run(host="0.0.0.0", port=5008)

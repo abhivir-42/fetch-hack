@@ -42,9 +42,9 @@ class FGIResponse(Model):
 # Initialize Agent
 agent = Agent(
     name="FGIagent",
-    port=8010,
+    port=8006,
     seed="fgi_agent1_secret_phrase",
-    endpoint=["http://127.0.0.1:8010/submit"],
+    endpoint=["http://127.0.0.1:8006/submit"],
     )
 
 @agent.on_event("startup")

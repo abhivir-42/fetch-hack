@@ -176,7 +176,7 @@ def init_agent():
         analytics_identity = Identity.from_seed("thisisyourdashboardagentphrase", 0) #os.getenv("DASHBOARD_AGENT_KEY"), 0)#DASHBOARD_AGENT_KEY
         register_with_agentverse(
             identity=analytics_identity,
-            url="http://localhost:5008/webhook",
+            url="http://localhost:5009/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),#AGENTVERSE_API_KEY
                                     
             agent_title="Dashboard Analytics Agent",
@@ -209,5 +209,5 @@ if __name__ == "__main__":
     load_dotenv()
     print("thisisyouragentphrase") #os.getenv("CLIENT_KEY"))#CLIENT_KEY
     # Run Flask in a separate thread
-    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5008, debug=True, use_reloader=False)).start()
+    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5009, debug=True, use_reloader=False)).start()
 

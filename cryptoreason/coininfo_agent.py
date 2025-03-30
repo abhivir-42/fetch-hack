@@ -32,9 +32,9 @@ class CoinResponse(Model):
 # Initialize Agent
 agent = Agent(
     name="CoinInfoAgent",
-    port=8009,
+    port=8004,
     seed="coin_info_agent1_secret_phrase",
-    endpoint=["http://127.0.0.1:8009/submit"],
+    endpoint=["http://127.0.0.1:8004/submit"],
     )
 
 def get_crypto_info(blockchain: str) -> CoinResponse:
