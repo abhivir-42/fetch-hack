@@ -71,6 +71,10 @@ class FGIResponse(Model):
     status: str
     timestamp: str
 
+counter_asi = 5
+risk = " "
+investor = " "
+
 # Initialize the agent
 #logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
 agent = Agent(
@@ -145,7 +149,9 @@ async def handle_cryptonews_response(ctx: Context, sender: str, msg: CryptonewsR
 async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
     """Analyzes FGI data and determines whether to issue a SELL/BUY or HOLD alert."""
     logging.info(f"📊 Received FGIResponse: {msg}")
-
+    global investor
+    global risk
+    
     print(f"Please, confirm if you long-term or short-term investor?")
     investor = input("Investor [long-term/short-term/speculate]: ").lower()
     if ((investor != "long-term") and (investor != "short-term") and (investor != "speculate")):
@@ -168,13 +174,15 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
     
     Fear Greed Index Analysis - {msg}
     Coin Market Data - {COININFORMATION}
+    Blockchain network - {NETWORK}
     User's type of investing - {investor}
     User's risk strategy - {risk}
     
     Most recent crypto news - {CRYPTONEWSINFO}
     
     You are a crypto expert, who is assisting the user to make the most meaningful decisions, to gain the most revenue. 
-    Given the following information, respond with one word, either "SELL", "BUY" or "HOLD" native token from {NETWORK} network.
+    Given the following information, respond with decision of either "SELL", "BUY" or "HOLD" native token from given network. Inlcude all of the reasoning based on the analysed data and personal thoughts. Consider that the information provided is the only input from the user, and the user cannot provide additional information. However, you could point out to the area or questions which could help you making a solid decision.
+    
     '''
     
     try:
@@ -188,19 +196,65 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
 
 @agent.on_message(model=ASI1Response)
 async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
-    if "SELL" in msg.decision:
-        logging.critical("🚨 SELL SIGNAL DETECTED!")
-        print("SELL")
-        #start search an run of ETH to USDC swap agent
-    elif "BUY" in msg.decision:
-        logging.critical("✅ BUY SIGNAL DETECTED!")
-        print("BUY")
-        #start search an run of ETH to USDC swap agent
-    else:
-        logging.info("⏳ HOLD decision received.")
-        print("HOLD")
+    global counter_asi
+    counter_asi = counter_asi - 1
+    logging.info(f"✅ ASI1 Agent {counter_asi} finished reasoning: {msg.decision}")
+    
+    if(counter_asi > 1):
+        prompt = f'''    
+        Consider the following factors:
+        
+        Fear Greed Index Analysis - {msg}
+        Coin Market Data - {COININFORMATION}
+        Blockchain network - {NETWORK}
+        User's type of investing - {investor}
+        User's risk strategy - {risk}
+        
+        Most recent crypto news - {CRYPTONEWSINFO}
+        
+        You are a crypto expert, who is assisting the user to make the most meaningful decisions, to gain the most revenue. 
+        
+        This query has been analysed with the following reasoning:
+        "{msg.decision}"
+        
+        Given the following information and reasoning from other expert, respond with decision of either "SELL", "BUY" or "HOLD" native token from {NETWORK} network. Inlcude all of the reasoning based on the analysed data and personal thoughts. Consider that the information provided is the only input from the user, and the user cannot provide additional information. However, you could point out to the area or questions which could help you making a solid decision.
+        '''
+        await ctx.send(REASON_AGENT, ASI1Request(query=prompt))
 
-
+    
+    if(counter_asi == 1):
+        prompt = f'''    
+        Consider the following factors:
+        
+        Fear Greed Index Analysis - {msg}
+        Coin Market Data - {COININFORMATION}
+        Blockchain network - {NETWORK}
+        User's type of investing - {investor}
+        User's risk strategy - {risk}
+        
+        Most recent crypto news - {CRYPTONEWSINFO}
+        
+        You are an independent expert of a crypto market with knowledge of how worldwide politis affects the cryptomarket. You are assisting the user to make the most meaningful decisions, to gain the most revenue whilst minimising potential losses. 
+        
+        This query has been analysed by other crypto experts with the following reasoning:
+        "{msg.decision}"
+        
+        Given the following information and reasoning from other expert, respond with a single word decision of either "SELL", "BUY" or "HOLD" a native token from given network.
+        '''
+        await ctx.send(REASON_AGENT, ASI1Request(query=prompt))
+    
+    if (counter_asi == 0):
+        if "SELL" in msg.decision:
+            logging.critical("🚨 SELL SIGNAL DETECTED!")
+            print("SELL")
+            #start search an run of ETH to USDC swap agent
+        elif "BUY" in msg.decision:
+            logging.critical("✅ BUY SIGNAL DETECTED!")
+            print("BUY")
+            #start search an run of ETH to USDC swap agent
+        else:
+            logging.info("⏳ HOLD decision received.")
+            print("HOLD")
 
 
 

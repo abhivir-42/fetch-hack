@@ -1,3 +1,4 @@
+#pip install newsapi-python
 import os
 import logging
 import sys
@@ -7,7 +8,6 @@ from datetime import datetime, timezone
 from typing import Optional
 from uagents import Agent, Context, Model
 import atexit
-#pip install newsapi-python
 from newsapi import NewsApiClient
 
 # Configure Logging
@@ -43,7 +43,6 @@ agent = Agent(
     name="Newsagent",
     port=8016,
     seed="newsnewshehhee_agent1_secret_phrase",
-    mailbox = True,
     endpoint=["http://127.0.0.1:8016/submit"],
     )
 

@@ -80,9 +80,9 @@ class SwaplandResponse(Model):
 #logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
 agent = Agent(
     name="SentimentBased CryptoSellAlerts",
-    port=8017,
+    port=8001,
     seed="this_is_main_agent_to_run",
-    endpoint=["http://127.0.0.1:8017/submit"],
+    endpoint=["http://127.0.0.1:8001/submit"],
     )
 
 
@@ -108,6 +108,9 @@ async def swapland_request(ctx: Context):
         fetchwall= (str)(agent.wallet.address())
         await ctx.send(TOPUP_AGENT, TopupRequest(amount=topupamount, wal=fetchwall))
     
+    #check balance here
+    debugflag = input("wait fro the next step!..").lower()
+
     try:
         await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
         ctx.logger.info(f"Ready status sent")
@@ -147,8 +150,9 @@ async def response_funds(ctx: Context, sender: str, msg: TopupResponse):
 @agent.on_message(model=PaymentRequest)
 async def message_handler(ctx: Context, sender: str, msg: PaymentRequest):
     ctx.logger.info(f"Received message from {sender}: {msg}")
+    
     #send the payment
-    fees = msg.amount
+    fees = msg.amount #input does not compile variables
     rewardtopay = input("You are required to pay {fees} FET for this service. Proceed?[yes/no]: ").lower()
     if (rewardtopay == "yes"):
         transaction = ctx.ledger.send_tokens(msg.wallet_address, msg.amount, msg.denom,agent.wallet)
