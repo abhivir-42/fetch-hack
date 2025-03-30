@@ -256,11 +256,16 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
         if "SELL" in msg.decision:
             logging.critical("🚨 SELL SIGNAL DETECTED!")
             print("SELL")
+            #query ETH or coin price right now, and convert USD into COIN
             #start search an run of ETH to USDC swap agent
+            
         elif "BUY" in msg.decision:
             logging.critical("✅ BUY SIGNAL DETECTED!")
             print("BUY")
-            #start search an run of ETH to USDC swap agent
+            #convert amount from US dollars to USDC, which is equivalent.
+            #just pass amount as it is
+            #start search an run of USDC to ETH swap agent
+            
         else:
             logging.info("⏳ HOLD decision received.")
             print("HOLD")

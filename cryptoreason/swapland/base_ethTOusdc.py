@@ -109,6 +109,7 @@ def webhook():
 
         message = parse_message_from_agent(data)
         agent_response = message.payload['metamask_key']
+        amount = message.payload['amount']
         
         global METAMASKKEY
         METAMASKKEY = str(agent_response)
@@ -116,10 +117,9 @@ def webhook():
         logger.info(f"Processed response: {agent_response}")
         #logger.info(f"Processed metamask key: {metamask_response}")
         #how do i parse respons into variables? blockchain, signal, amount
-        #send_data() #send response status
         
         #everything works!
-        #execute_swap() #do the swap
+        execute_swap(amount) ##already converted to ETH value
         logger.info(f"Called function execute_swap")
         return jsonify({"status": "success"})
 
@@ -129,11 +129,12 @@ def webhook():
 
     
 
-def execute_swap():
+def execute_swap(amount : float):
     uni_address = Web3.to_checksum_address('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913')
     uni_abi = '[{"inputs":[{"internalType":"address","name":"implementationContract","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"}],"name":"AdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"implementation","type":"address"}],"name":"Upgraded","type":"event"},{"stateMutability":"payable","type":"fallback"},{"inputs":[],"name":"admin","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newAdmin","type":"address"}],"name":"changeAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"implementation","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"}],"name":"upgradeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"upgradeToAndCall","outputs":[],"stateMutability":"payable","type":"function"}]'
 
-    amount_in = 1 * 10**14#18  working with 4
+    #amount_in = 1 * 10**14#18  working with 4
+    amount_in = amount * 10**18
     min_amount_out = 1 * 10**4 #10**6 == 1USDC  working with 5
 
     weth_address = Web3.to_checksum_address('0x4200000000000000000000000000000000000006')

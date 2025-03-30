@@ -120,8 +120,10 @@ async def swapland_request(ctx: Context):
     
     try:
         chain = NETWORK
-        amountt = 1.0
-        signall = "Buy"
+        #money = input("How much would you like to swap?: ").lower()
+        amountt = 0.1 #usdc to eth
+        #amountt = 1.0 #if BUY signal, convert to USDC, if SELL, convert to ETH
+        signall = "Buy" #usdc to eth
         #all works, temporary disabled to test further
         #await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))
         print(f"Sent request") #stuck here

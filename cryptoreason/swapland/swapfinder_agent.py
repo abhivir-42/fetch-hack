@@ -26,6 +26,7 @@ CORS(app)
 # Initialising client identity to get registered on agentverse
 client_identity = None
 
+AMOUNT_TO_SWAP = 0
 
 class SwaplandRequest(Model):
     blockchain: str
@@ -78,7 +79,7 @@ def init_client():
         
         #debug
         #search("BUY, ETH, Base") #test
-        call_swap("agent1qt40dnmucj0umdf5mryz6qgtmw4q0jrwlxu96h67ldfjgsvf5t9q2uch5hr", private_key)
+        #call_swap("agent1qt40dnmucj0umdf5mryz6qgtmw4q0jrwlxu96h67ldfjgsvf5t9q2uch5hr", private_key)
         #usdcTOeth agent1qt40dnmucj0umdf5mryz6qgtmw4q0jrwlxu96h67ldfjgsvf5t9q2uch5hr
         #ethTOusdc agent1qgl5kptpr3x2t2fnuxnnyf5e8rum8n7u9ett0lv6pqd00k302d72gcygy32
     except Exception as e:
@@ -131,11 +132,14 @@ def webhook():
         message = parse_message_from_agent(data)
         agent_response = message.payload
 
+        global AMOUNT_TO_SWAP
+        AMOUNT_TO_SWAP = message.payload['amount']
+        
         logger.info(f"Processed response: {agent_response}")
         #how do i parse respons into variables? blockchain, signal, amount
         send_data() #send response status
         
-        #search(agent_response) #debug
+        search(agent_response) #debug to be enabled
         
         return jsonify({"status": "success"})
 
@@ -166,7 +170,7 @@ def search(query):
         agents = data.get("agents", [])
         print("Formatted API Response:")
         prompt = f'''
-        These are all agents found through the search agent function using givent information: "{query}" and {payload}.
+        These are all agents found through the search agent function using givent information: "{query}" and tagged as swapland.
         Each agent has 3 parameters to consider: name, address and readme. Evaluate them all.
         Analyse all of the agents in the list and find the most suitable and output its agent address.
         Agents discovered:
@@ -192,7 +196,8 @@ def search(query):
         
         print(response)  # Output AI response
         #call_swap(str(response,metamask_key))
-        
+        call_swap(str(response), private_key) # need to test this
+
         print("Program completed")
             
     else:
@@ -201,21 +206,15 @@ def search(query):
     return {"status": "Agent searched"}
 
 
-
-
-
-
-
-
 #@app.route('/api/call-swap', methods=['POST'])
 def call_swap(swapaddress : str, metamask_key : str):
    """Send payload to the selected agent based on provided address."""
-
    try:
        # Parse the request payload
        payload = {
         "variable": "swapland something",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
         "metamask_key": metamask_key,
+        "amount": AMOUNT_TO_SWAP
         }
         
        agent_address = swapaddress
