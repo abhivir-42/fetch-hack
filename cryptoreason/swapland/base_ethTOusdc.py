@@ -62,7 +62,9 @@ def init_client():
         client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnnnkk"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
-![tag:swapland](https://img.shields.io/badge/swaplandbaseethusdc-1)
+![tag:swapland](https://img.shields.io/badge/swaplandbaseethusdc-01)
+![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
+![domain:swapland](https://img.shields.io/badge/swapland-01)
 
 <description>Swapland agent which uses uniswapV2 smart contract to SELL ETH (swap ETH into USDC) on base network.</description>
 <use_cases>
@@ -133,8 +135,8 @@ def execute_swap(amount : float):
     uni_address = Web3.to_checksum_address('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913')
     uni_abi = '[{"inputs":[{"internalType":"address","name":"implementationContract","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"}],"name":"AdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"implementation","type":"address"}],"name":"Upgraded","type":"event"},{"stateMutability":"payable","type":"fallback"},{"inputs":[],"name":"admin","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newAdmin","type":"address"}],"name":"changeAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"implementation","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"}],"name":"upgradeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"upgradeToAndCall","outputs":[],"stateMutability":"payable","type":"function"}]'
 
-    #amount_in = 1 * 10**14#18  working with 4
-    amount_in = amount * 10**18
+    #amount_in = int(0.0001 * 10**18)#18  working with 4
+    amount_in = int(amount * 10**18)
     min_amount_out = 1 * 10**4 #10**6 == 1USDC  working with 5
 
     weth_address = Web3.to_checksum_address('0x4200000000000000000000000000000000000006')

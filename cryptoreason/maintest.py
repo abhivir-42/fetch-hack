@@ -40,6 +40,9 @@ SWAPLAND_AGENT="agent1qv9phv30v8gpm9r4cwk0djhuzdvsa7rdzm2k5tnefmdu76mp92l9zuqeex
 TOPUP_AGENT="agent1q02xdwqwthtv6yeawrpcgpyvh8a002ueeynnltu8n6gxq0hlh8qu7ep5uhu"
 REWARD_AGENT="agent1qde8udnttat2mmq3srkrz60wm3248yg43528wy2guwyewtesd73z7x3swru"
 
+REWARD = 2000000000000000000 #expected to receive
+DENOM = "atestfet"
+
 NETWORK = "base" #default global
 COININFORMATION = ""
 CRYPTONEWSINFO = ""
@@ -58,6 +61,9 @@ class PaymentInquiry(Model):
     ready: str
     
 class PaymentReceived(Model):
+    status: str
+    
+class RewardRequest(Model):
     status: str
 ###--------------###
 
@@ -89,10 +95,9 @@ agent = Agent(
 @agent.on_event("startup")
 async def introduce_agent(ctx: Context):
     """Logs agent startup details."""
-    logging.info(f"✅ Agent started: {ctx.agent.address}")
-    #print(f"Hello! I'm {agent.name} and my address is {agent.address}, my wallet address {agent.wallet.address()} ")
+    #logging.info(f"✅ Agent started: {ctx.agent.address}")
     ctx.logger.info(f"Hello! I'm {agent.name} and my address is {agent.address}, my wallet address {agent.wallet.address()}")
-    logging.info("🚀 Agent startup complete.")
+    logging.info("Agent startup complete.")
     ledger: LedgerClient = get_ledger()
     agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/1000000000000000000
     ctx.logger.info(f"My balance is {agent_balance} TESTFET")
@@ -109,28 +114,34 @@ async def swapland_request(ctx: Context):
         await ctx.send(TOPUP_AGENT, TopupRequest(amount=topupamount, wal=fetchwall))
     
     #check balance here
-    debugflag = input("wait fro the next step!..").lower()
+    #debugflag = input("wait fro the next step!..").lower()
 
     try:
         await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
-        ctx.logger.info(f"Ready status sent")
+        ctx.logger.info(f"Ready to pay status sent")
     except Exception as e:
         logging.error(f"Failed to send request to Reward Agent: {e}")
-    
     
     try:
         chain = NETWORK
         #money = input("How much would you like to swap?: ").lower()
-        amountt = 0.1 #usdc to eth
-        #amountt = 1.0 #if BUY signal, convert to USDC, if SELL, convert to ETH
-        signall = "Buy" #usdc to eth
+        #amountt = 0.1 #usdc to eth
+        #signall = "Buy" #usdc to eth
+        
+        amountt = 0.0002 #SELL signal, ETH to USDC
+        signall = "Sell" #usdc to eth
         #all works, temporary disabled to test further
         #await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))
-        print(f"Sent request") #stuck here
+        #print(f"Sent request") #stuck here
 
     except Exception as e:
         logging.error(f"Failed to send request: {e}")
-        
+    
+    #debugflag = input("wait fro the next step!..").lower()
+
+    #ctx.logger.info(f"Reward request sent..")
+
+    
 
 # Handle incoming messages with the SwaplandResponse model from ai agent
 @agent.on_message(model=SwaplandResponse)
@@ -138,33 +149,31 @@ async def message_handler(ctx: Context, sender: str, msg: SwaplandResponse):
     ctx.logger.info(f"Received message from {sender}: {msg.status}")
 
 
+#main agent received requested funds
 @agent.on_message(model=TopupResponse)
 async def response_funds(ctx: Context, sender: str, msg: TopupResponse):
     """Handles topup response."""
-    logging.info(f"📩 Received Topup request: {msg.status}")
-    #COININFORMATION = msg
-    try:
-        await ctx.send(sender, TopupResponse())
-    except Exception as e:
-        logging.error(f"❌ Error sending CryptonewsRequest: {e}")
+    logging.info(f"📩 User's wallet topped up: {msg.status}")
 
 
+#received request to make a payment for execution from reward_agent
 @agent.on_message(model=PaymentRequest)
 async def message_handler(ctx: Context, sender: str, msg: PaymentRequest):
     ctx.logger.info(f"Received message from {sender}: {msg}")
     
     #send the payment
     fees = msg.amount #input does not compile variables
-    rewardtopay = input("You are required to pay {fees} FET for this service. Proceed?[yes/no]: ").lower()
+    logging.info(f"You are required to pay {fees} FET for this service. ")
+    rewardtopay = input(f"You are required to pay {fees} FET for this service. Proceed?[yes/no]: ").lower()
     if (rewardtopay == "yes"):
         transaction = ctx.ledger.send_tokens(msg.wallet_address, msg.amount, msg.denom,agent.wallet)
     else:
         exit(1)
- 
-    # send the tx hash so reward agent can confirm
+    # send the tx hash so reward agent can confirm with fees payment
     await ctx.send(sender, TransactionInfo(tx_hash=transaction.tx_hash))#str(ctx.agent.address)
     
 
+#confirmation from reward_agent after main agent paid fees for exection.
 @agent.on_message(model=PaymentReceived)
 async def message_handler(ctx: Context, sender: str, msg: PaymentReceived):
     if (msg.status == "success"):
@@ -173,14 +182,47 @@ async def message_handler(ctx: Context, sender: str, msg: PaymentReceived):
         agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/1000000000000000000
         #print(f"Balance after fees: {agent_balance} TESTFET")
         ctx.logger.info(f"Balance after fees: {agent_balance} TESTFET")
+        
+        
+        #MORE TO IMPLEMENT! need to receive a confirmation of swapping, sent from base_agents
+        #i need to insert this at the end of search_agent swapping execution
+        #request rewards to make it consecuitive call
+        try:
+            await ctx.send(REWARD_AGENT, RewardRequest(status="reward"))
+        except Exception as e:
+            logging.error(f"Failed to send request for reward: {e}")
+        
     else:
         ctx.logger.info(f"Payment transaction unsuccessful!")
         exit(1)
 
+#confirmation that reward has been received from reward_agent
+@agent.on_message(model=TransactionInfo)
+async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
+    ctx.logger.info(f"Received transaction info from {sender}: {msg}")
+    tx_resp = await wait_for_tx_to_complete(msg.tx_hash, ctx.ledger)
+ 
+    coin_received = tx_resp.events["coin_received"]
+    if (
+            coin_received["receiver"] == str(agent.wallet.address())
+            and coin_received["amount"] == f"{REWARD}{DENOM}"
+    ):
+        ctx.logger.info(f"Transaction was successful: {coin_received}")
+    else:
+        ctx.logger.info(f"Transaction was unsuccessful: {coin_received}")
+
+    ledger: LedgerClient = get_ledger()
+    agent_balance = (ledger.query_bank_balance(Address(agent.wallet.address())))/1000000000000000000
+    ctx.logger.info(f"Balance after receiving reward: {agent_balance} TESTFET")
+    
+    await ctx.send(sender,PaymentReceived(status="reward"))#str(ctx.agent.address)
+
+
+
 # Ensure the agent starts running
 if __name__ == "__main__":
     try:
-        logging.info("🔥 Starting the agent...")
+        logging.info("Starting the agent...")
         agent.run()
     except Exception as e:
-        logging.error(f"❌ Error starting the agent: {e}")
+        logging.error(f"Error starting the agent: {e}")

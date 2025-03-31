@@ -46,6 +46,8 @@ agent = Agent(
     seed="fgi_agent1_secret_phrase",
     endpoint=["http://127.0.0.1:8006/submit"],
     )
+    
+    
 
 @agent.on_event("startup")
 async def startup(ctx: Context):
@@ -53,7 +55,7 @@ async def startup(ctx: Context):
     ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
     #dummy_request = FGIRequest(limit=1)
     #await process_response(ctx, dummy_request)
-    
+
     
 def get_fear_and_greed_index(limit: int = 1) -> FGIResponse:
     """Fetch Fear and Greed index data from CoinMarketCap API"""

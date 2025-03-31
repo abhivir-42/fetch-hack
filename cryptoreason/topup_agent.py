@@ -54,8 +54,8 @@ async def introduce_agent(ctx: Context):
 async def get_faucet_farmer(ctx: Context):
     ledger: LedgerClient = get_ledger()
     faucet: FaucetApi = get_faucet()
-    fund_agent_if_low(farmer.wallet.address())
-    #faucet.get_wealth(farmer.wallet.address())
+    #fund_agent_if_low(farmer.wallet.address())
+    faucet.get_wealth(farmer.wallet.address())
     agent_balance = ledger.query_bank_balance(Address(farmer.wallet.address()))
     converted_balance = agent_balance/1000000000000000000
     
@@ -78,8 +78,8 @@ async def get_faucet_farmer(ctx: Context):
     if (converted_balance >1):
         # delegate some tokens to this validator
         agent_balance = agent_balance - 1000000000000000
-        tx = ledger_client.delegate_tokens(validator.address, agent_balance, farmer.wallet)
-        tx.wait_to_complete()
+        #tx = ledger_client.delegate_tokens(validator.address, agent_balance, farmer.wallet)
+        #tx.wait_to_complete()
         
         #then call function to stake
         ctx.logger.info("Delegation completed.")
@@ -93,7 +93,7 @@ async def get_faucet_farmer(ctx: Context):
 async def request_funds(ctx: Context, sender: str, msg: TopupRequest):
     """Handles topup requests Topup."""
     
-    fund_agent_if_low(farmer.wallet.address())
+    #fund_agent_if_low(farmer.wallet.address())
     
     ledger: LedgerClient = get_ledger()
     faucet: FaucetApi = get_faucet()
@@ -103,19 +103,20 @@ async def request_funds(ctx: Context, sender: str, msg: TopupRequest):
     sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/1000000000000000000#ctx.agent.wallet.address()
     ctx.logger.info({sender_balance})
     ##faucet.get_wealth(ctx.agent.wallet.address())#ctx.agent.wallet.address() msg.wal can be removed from the class
-    amo = 500000000000000000 #0.5 TESTFET
+    amo = int(msg.amount * 1000000000000000000) #5 TESTFET
     deno = 'atestfet'
     
     transaction = ctx.ledger.send_tokens("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf", amo, deno,farmer.wallet)
     
     sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/1000000000000000000
+    sender_balance = sender_balance + amo/1000000000000000000
     logging.info(f"📩 After funds received: {sender_balance}")
     #ctx.logger.info({sender_balance})
     
-    try:
-        await ctx.send(sender, TopupResponse(status="Success!"))
-    except Exception as e:
-        logging.error(f"❌ Error sending TopupResponse: {e}")
+    #try:
+    await ctx.send(sender, TopupResponse(status="Success!"))
+  #  except Exception as e:
+  #      logging.error(f"❌ Error sending TopupResponse: {e}")
 
 
 if __name__ == "__main__":

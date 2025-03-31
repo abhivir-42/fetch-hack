@@ -57,11 +57,15 @@ def init_client():
     """Initialize and register the client agent."""
     global client_identity
     try:
+        #![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
+            #domain:domain-of-your-agent
         # Load the agent secret key from environment variables
         client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnhhiugcynnkk"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
-![tag:swapland](https://img.shields.io/badge/swaplandbaseusdceth-1)
+![tag:swapland](https://img.shields.io/badge/swaplandbaseusdceth-02)
+![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
+![domain:swapland](https://img.shields.io/badge/swapland-02)
 
 <description>Swapland agent which uses uniswapV2 smart contract to BUY ETH (swap USDC into ETH) on base network.</description>
 <use_cases>
@@ -215,11 +219,10 @@ def execute_swap(amoount : float):
 
     #signed_message = account.sign_message(signable_message)
 
-
-
+    #amount = amount * 10**3 #adjust , convert it
     # Swap parameters
-    #amount_in = 2 * 10**5  # 1 USDC 1 * 10**6 ,,, this should take .20 USDC
-    amount_in = amount * 10**6
+    amount_in = int(amount * 10**6)  # 1 USDC 1 * 10**6 ,,, this should take .20 USDC
+    #amount_in = amount * 10**6 does not tolerate floats
     
     min_amount_out = 1 * 10**12  # 0.00001 ETH (18 decimals, ~$2.50 at $2,500/ETH)
     path = [usdc_address, weth_address]  # USDC → WETH

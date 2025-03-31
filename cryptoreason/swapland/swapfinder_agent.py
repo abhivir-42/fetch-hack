@@ -50,6 +50,8 @@ def init_client():
 
         readme = """
 ![tag:swapland](https://img.shields.io/badge/swapland-master)
+![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
+![domain:swapland](https://img.shields.io/badge/swapland--master-00)
 
             <description>This Agent can only receive a message from another agent in string format.</description>
             <use_cases>
@@ -172,7 +174,7 @@ def search(query):
         prompt = f'''
         These are all agents found through the search agent function using givent information: "{query}" and tagged as swapland.
         Each agent has 3 parameters to consider: name, address and readme. Evaluate them all.
-        Analyse all of the agents in the list and find the most suitable and output its agent address.
+        Analyse all of the agents in the list and find the most suitable one. You should output a single string with the Agent Address itself only.
         Agents discovered:
         '''
         for agent in agents:
