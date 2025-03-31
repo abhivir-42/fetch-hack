@@ -19,6 +19,7 @@ from uagents import Model
 #from fetchai.crypto import Identity
 from uuid import uuid4
 from llm_swapfinder import query_llm
+import requests
  
 #uniswap libraries
 from uniswap_universal_router_decoder import FunctionRecipient, RouterCodec, V4Constants
@@ -46,6 +47,9 @@ class SwaplandRequest(Model):
     amount: float
 
 class SwaplandResponse(Model):
+    status: str
+    
+class SwapCompleted(Model):
     status: str
 
 # Load environment variables from .env file
@@ -126,6 +130,38 @@ def webhook():
 
     except Exception as e:
         logger.error(f"Error in webhook: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+#send to uAgent
+@app.route('/request', methods=['POST'])
+def send_status():
+    """Send payload to the selected agent based on provided address."""
+    global agent_response
+    agent_response = None
+
+    try:
+        # Parse the request payload
+        #data = request.json
+        payload = {"status": "Successfully executed Swapland Agent to convert USDC to ETH!"}#data.get('payload')  # Extract the payload dictionary
+
+        uagent_address = "agent1qfrhxny23vz62v5tr20qnmnjujq8k5t0mxgwdxfap945922t9v4ugqtqkea" #run the uagent.py copy the address and paste here
+        
+        # Build the Data Model digest for the Request model to ensure message format consistency between the uAgent and AI Agent
+        model_digest = Model.build_schema_digest(SwapCompleted)
+
+        # Send the payload to the specified agent
+        send_message_to_agent(
+            client_identity,  # Frontend client identity
+            uagent_address,  # Agent address where we have to send the data
+            payload,  # Payload containing the data
+            model_digest=model_digest
+        )
+
+        return jsonify({"status": "swapcompleted", "payload": payload})
+
+    except Exception as e:
+        logger.error(f"Error sending data to agent: {e}")
         return jsonify({"error": str(e)}), 500
 
 
@@ -293,6 +329,8 @@ def execute_swap(amoount : float):
     # Wait for confirmation
     receipt = w3.eth.wait_for_transaction_receipt(trx_hash)
     print(f"Status: {'Success' if receipt['status'] == 1 else 'Failed'}, Gas Used: {receipt['gasUsed']}")
+    
+    send_status() #send status to main agent
 
 
 

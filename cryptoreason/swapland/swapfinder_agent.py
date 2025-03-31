@@ -99,7 +99,7 @@ def send_data():
     try:
         # Parse the request payload
         #data = request.json
-        payload = {"status": "Successfully request sent to Swapland uAgent!"}#data.get('payload')  # Extract the payload dictionary
+        payload = {"status": "Successfully request sent to Swapland Agent!"}#data.get('payload')  # Extract the payload dictionary
 
         uagent_address = "agent1qfrhxny23vz62v5tr20qnmnjujq8k5t0mxgwdxfap945922t9v4ugqtqkea" #run the uagent.py copy the address and paste here
         
@@ -201,7 +201,7 @@ def search(query):
         call_swap(str(response), private_key) # need to test this
 
         print("Program completed")
-            
+        #send_data() #send response status confirming that execution uniswap agent has been called
     else:
         print(f"Request failed with status code {response.status_code}")
 

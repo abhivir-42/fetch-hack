@@ -65,6 +65,9 @@ class PaymentReceived(Model):
     
 class RewardRequest(Model):
     status: str
+    
+class SwapCompleted(Model):
+    status: str
 ###--------------###
 
 class TopupRequest(Model):
@@ -107,6 +110,8 @@ async def introduce_agent(ctx: Context):
 async def swapland_request(ctx: Context):
     """Requests market data for the monitored coin once a day."""
     
+    
+    #execute topup_agent to receive funds
     topupwallet = input("Would you like to top up your agent wallet?[yes/no]: ").lower()
     if (topupwallet == "yes"):
         topupamount = input("How many FET to transfer over?: ").lower()#convert from string to float
@@ -116,12 +121,17 @@ async def swapland_request(ctx: Context):
     #check balance here
     #debugflag = input("wait fro the next step!..").lower()
 
+
+    #execute reward_agent to pay fees for using swapland service. this might not be async though
     try:
         await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
         ctx.logger.info(f"Ready to pay status sent")
     except Exception as e:
-        logging.error(f"Failed to send request to Reward Agent: {e}")
+        logging.error(f"Failed to send request to reward_Agent to pay fees for using swapland services: {e}")
     
+    
+    
+    # i need to insert this after reason_agent(ASI1 llm) is done.
     try:
         chain = NETWORK
         #money = input("How much would you like to swap?: ").lower()
@@ -143,7 +153,7 @@ async def swapland_request(ctx: Context):
 
     
 
-# Handle incoming messages with the SwaplandResponse model from ai agent
+# Handle incoming messages with the SwaplandResponse model from ai agent swapfinder_agent
 @agent.on_message(model=SwaplandResponse)
 async def message_handler(ctx: Context, sender: str, msg: SwaplandResponse):
     ctx.logger.info(f"Received message from {sender}: {msg.status}")
@@ -183,15 +193,6 @@ async def message_handler(ctx: Context, sender: str, msg: PaymentReceived):
         #print(f"Balance after fees: {agent_balance} TESTFET")
         ctx.logger.info(f"Balance after fees: {agent_balance} TESTFET")
         
-        
-        #MORE TO IMPLEMENT! need to receive a confirmation of swapping, sent from base_agents
-        #i need to insert this at the end of search_agent swapping execution
-        #request rewards to make it consecuitive call
-        try:
-            await ctx.send(REWARD_AGENT, RewardRequest(status="reward"))
-        except Exception as e:
-            logging.error(f"Failed to send request for reward: {e}")
-        
     else:
         ctx.logger.info(f"Payment transaction unsuccessful!")
         exit(1)
@@ -217,6 +218,20 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
     
     await ctx.send(sender,PaymentReceived(status="reward"))#str(ctx.agent.address)
 
+
+
+# Waits for completion of swapland agents. then executes request for reward from reward_agent
+@agent.on_message(model=SwapCompleted)
+async def message_handler(ctx: Context, sender: str, msg: SwapCompleted):
+    if msg.status == "swapcompleted":
+        ctx.logger.info(f"Successfully swapped via swapland: {msg.status}")
+        try:
+            await ctx.send(REWARD_AGENT, RewardRequest(status="reward"))
+        except Exception as e:
+            logging.error(f"Failed to send request for reward: {e}")
+    else:
+        ctx.logger.info(f"Fail to execute swap via swapland: {msg.status}")
+        
 
 
 # Ensure the agent starts running
