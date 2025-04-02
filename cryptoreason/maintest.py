@@ -68,6 +68,7 @@ class RewardRequest(Model):
     
 class SwapCompleted(Model):
     status: str
+    message: str
 ###--------------###
 
 class TopupRequest(Model):
@@ -139,9 +140,9 @@ async def swapland_request(ctx: Context):
         #signall = "Buy" #usdc to eth
         
         amountt = 0.0002 #SELL signal, ETH to USDC
-        signall = "Sell" #usdc to eth
+        signall = "Sell" #eth to usdc
         #all works, temporary disabled to test further
-        #await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))
+        await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))
         #print(f"Sent request") #stuck here
 
     except Exception as e:
@@ -153,10 +154,16 @@ async def swapland_request(ctx: Context):
 
     
 
+
+
+
+
 # Handle incoming messages with the SwaplandResponse model from ai agent swapfinder_agent
 @agent.on_message(model=SwaplandResponse)
 async def message_handler(ctx: Context, sender: str, msg: SwaplandResponse):
     ctx.logger.info(f"Received message from {sender}: {msg.status}")
+
+
 
 
 #main agent received requested funds
@@ -166,14 +173,16 @@ async def response_funds(ctx: Context, sender: str, msg: TopupResponse):
     logging.info(f"📩 User's wallet topped up: {msg.status}")
 
 
+
+
 #received request to make a payment for execution from reward_agent
 @agent.on_message(model=PaymentRequest)
 async def message_handler(ctx: Context, sender: str, msg: PaymentRequest):
     ctx.logger.info(f"Received message from {sender}: {msg}")
     
     #send the payment
-    fees = msg.amount #input does not compile variables
-    logging.info(f"You are required to pay {fees} FET for this service. ")
+    fees = msg.amount /1000000000000000000 #input does not compile variables
+    #logging.info(f"You are required to pay {fees} FET for this service. ")
     rewardtopay = input(f"You are required to pay {fees} FET for this service. Proceed?[yes/no]: ").lower()
     if (rewardtopay == "yes"):
         transaction = ctx.ledger.send_tokens(msg.wallet_address, msg.amount, msg.denom,agent.wallet)
@@ -187,14 +196,14 @@ async def message_handler(ctx: Context, sender: str, msg: PaymentRequest):
 @agent.on_message(model=PaymentReceived)
 async def message_handler(ctx: Context, sender: str, msg: PaymentReceived):
     if (msg.status == "success"):
-        ctx.logger.info(f"Payment transaction successful!")
+        ctx.logger.info(f"Fees transaction successful!")
         ledger: LedgerClient = get_ledger()
         agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/1000000000000000000
         #print(f"Balance after fees: {agent_balance} TESTFET")
         ctx.logger.info(f"Balance after fees: {agent_balance} TESTFET")
         
     else:
-        ctx.logger.info(f"Payment transaction unsuccessful!")
+        ctx.logger.info(f"Fees transaction unsuccessful!")
         exit(1)
 
 #confirmation that reward has been received from reward_agent
@@ -208,7 +217,7 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
             coin_received["receiver"] == str(agent.wallet.address())
             and coin_received["amount"] == f"{REWARD}{DENOM}"
     ):
-        ctx.logger.info(f"Transaction was successful: {coin_received}")
+        ctx.logger.info(f"Reward transaction was successful: {coin_received}")
     else:
         ctx.logger.info(f"Transaction was unsuccessful: {coin_received}")
 
@@ -223,15 +232,17 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
 # Waits for completion of swapland agents. then executes request for reward from reward_agent
 @agent.on_message(model=SwapCompleted)
 async def message_handler(ctx: Context, sender: str, msg: SwapCompleted):
-    if msg.status == "swapcompleted":
-        ctx.logger.info(f"Successfully swapped via swapland: {msg.status}")
+    if (msg.status == "swapcompleted"):
+        ctx.logger.info(f"{msg.message}")
+        
         try:
             await ctx.send(REWARD_AGENT, RewardRequest(status="reward"))
         except Exception as e:
             logging.error(f"Failed to send request for reward: {e}")
+    
     else:
         ctx.logger.info(f"Fail to execute swap via swapland: {msg.status}")
-        
+
 
 
 # Ensure the agent starts running

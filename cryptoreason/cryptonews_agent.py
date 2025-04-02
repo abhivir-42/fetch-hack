@@ -4,11 +4,14 @@ import logging
 import sys
 import json
 import requests
-from datetime import datetime, timezone
 from typing import Optional
 from uagents import Agent, Context, Model
 import atexit
 from newsapi import NewsApiClient
+
+from datetime import datetime, timedelta
+
+
 
 # Configure Logging
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -51,16 +54,39 @@ agent = Agent(
 async def startup(ctx: Context):
     """Initialize agent with a test request"""
     ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
-    #dummy_request = FGIRequest(limit=1)
-    #await process_response(ctx, dummy_request)
+    
+    #test it
+    #response = get_recent_crypto_news()
+    #ctx.logger.info(f"{response}")
 
 
 def get_recent_crypto_news(limit: int = 1) -> CryptonewsResponse:
     """Fetch crypto news data from NewsAPI"""
+    
+    today = datetime.today().strftime('%Y-%m-%d')# Get today's date
+    yesterday = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')# Get yesterday's date by subtracting 1 day
+   
     crypto_news=""
+    news_output=""
+    
     try:
-        newsapi = NewsApiClient(api_key="94b2d38f6b104eafa2f041bc323ed03c")
-        crypto_news = newsapi.get_everything(q="crypto OR cryptocurrency OR bitcoin OR ethereum OR financial market OR crypto exchange OR bullish OR bearish OR recession OR FOMC", language="en")
+        newsapi = NewsApiClient(api_key="94b2d38f6b104eafa2f041bc323ed03c")#"NEWS_API_KEY"
+        #94b2d38f6b104eafa2f041bc323ed03c 1b523a692b7640858f842cd09acc67df
+        crypto_news = newsapi.get_everything(q="crypto OR cryptocurrency OR bitcoin OR ethereum OR recession OR FOMC OR crypto exchange OR bearish OR bullish",from_param=str(yesterday),to=str(today), sort_by = "relevancy", page=20, language="en")#recession, FOMC, crypto exchange, bearish, bullish, financial market
+        #we need to optimise the size, otherwise it may exceed ASI1 28000 tokens limit
+        # Parse the JSON string into a Python dictionary
+        #news are delayed by 1 day with free version
+        data = json.loads(crypto_news)
+
+        # Create NEWOUTPUT with only title, description, and content
+        news_output = {
+            "title": data["title"],
+            "description": data["description"],
+            "content": data["content"]
+        }
+        
+        
+        
     except Exception as e:
         logging.error(f"❌ Couldnt connect to NEWS_API: {e}")
         #response = requests.get(url, headers=headers, params=params)
@@ -83,7 +109,7 @@ def get_recent_crypto_news(limit: int = 1) -> CryptonewsResponse:
         #    timestamp=datetime.utcnow(timezone.utc).isoformat()
         #)
         
-    return json.dumps(crypto_news)
+    return json.dumps(crypto_news) #news_output
             #status="success",
             #timestamp=datetime.now(timezone.utc).isoformat()
         
@@ -100,7 +126,7 @@ async def handle_message(ctx: Context, sender: str, msg: CryptonewsRequest):
 
 if __name__ == "__main__":
     try:
-        logging.info("🚀 Starting the FGI agent...")
+        logging.info("🚀 Starting the CryptoNews agent...")
         agent.run()
     except Exception as e:
         logging.error(f"❌ Fatal Error: {e}")

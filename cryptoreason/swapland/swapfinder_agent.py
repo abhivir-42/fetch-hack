@@ -45,7 +45,7 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmm"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmm"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
@@ -155,7 +155,7 @@ def search(query):
     # API endpoint and payload
     api_url = "https://agentverse.ai/v1/search/agents"
     payload = {
-        "search_text": "swapland",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
+        "search_text": "tag:swapland",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
         "sort": "relevancy",
         "direction": "asc",
         "offset": 0,
@@ -170,13 +170,16 @@ def search(query):
         # Parse the JSON response
         data = discovery.json()
         agents = data.get("agents", [])
-        print("Formatted API Response:")
+        logger.info("Formatted API Response:")
+        
         prompt = f'''
-        These are all agents found through the search agent function using givent information: "{query}" and tagged as swapland.
+        These are all agents found through the search agent function tagged as swapland.
         Each agent has 3 parameters to consider: name, address and readme. Evaluate them all.
-        Analyse all of the agents in the list and find the most suitable one. You should output a single string with the Agent Address itself only.
-        Agents discovered:
+        By analysing agents name in the list and find the most suitable one to match the user query: "{query}"
+        
+        You should output a single string with the Agent Address ONLY, which field can be found under the agent name.
         '''
+        logger.info("Agents discovered..")
         for agent in agents:
             print("-" * 100)
             print("Agent Name:", agent.get("name"))
@@ -190,20 +193,22 @@ def search(query):
             Readme: {agent.get("readme")}
             {"-" * 50}
             '''
-            print(prompt)
+            logger.info(f"{prompt}")
 
         #print(prompt)  # Debugging log
-        print("Request sent to ASI1 model to evaluate the list of discovered agents..")
+        logger.info("Request sent to ASI1 model to evaluate the list of discovered agents..")
         response = query_llm(prompt)  # Query the AI for a decision
-        
-        print(response)  # Output AI response
+                
+        logger.info(f"{response}")
+
         #call_swap(str(response,metamask_key))
         call_swap(str(response), private_key) # need to test this
 
-        print("Program completed")
+        logger.info("Program completed")
+
         #send_data() #send response status confirming that execution uniswap agent has been called
     else:
-        print(f"Request failed with status code {response.status_code}")
+        logger.info(f"Request failed with status code {response.status_code}")
 
     return {"status": "Agent searched"}
 

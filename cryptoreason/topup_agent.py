@@ -22,6 +22,7 @@ from uagents.utils import get_logger
 import argparse
 import time
 
+import asyncio
 
 
 class TopupRequest(Model):
@@ -39,6 +40,8 @@ farmer = Agent(
     endpoint=["http://localhost:8002/submit"],
 )
 
+ONETESTFET=1000000000000000000
+UNCERTAINTYFET=1000000000000000
 
 fund_agent_if_low(farmer.wallet.address())
  
@@ -48,16 +51,16 @@ async def introduce_agent(ctx: Context):
     ctx.logger.info(farmer.wallet.address())
     
 
- 
+"""
  #need to add some pause before starting
-@farmer.on_interval(5)
+@farmer.on_interval(50)
 async def get_faucet_farmer(ctx: Context):
     ledger: LedgerClient = get_ledger()
     faucet: FaucetApi = get_faucet()
     #fund_agent_if_low(farmer.wallet.address())
     faucet.get_wealth(farmer.wallet.address())
     agent_balance = ledger.query_bank_balance(Address(farmer.wallet.address()))
-    converted_balance = agent_balance/1000000000000000000
+    converted_balance = agent_balance/ONETESTFET
     
     print(f"Received: {converted_balance} TESTFET")
     #ctx.logger.info({agent_balance})
@@ -77,16 +80,16 @@ async def get_faucet_farmer(ctx: Context):
     
     if (converted_balance >1):
         # delegate some tokens to this validator
-        agent_balance = agent_balance - 1000000000000000
+        agent_balance = agent_balance - UNCERTAINTYFET
         #tx = ledger_client.delegate_tokens(validator.address, agent_balance, farmer.wallet)
         #tx.wait_to_complete()
         
         #then call function to stake
         ctx.logger.info("Delegation completed.")
         summary = ledger_client.query_staking_summary(farmer.wallet.address())
-        totalstaked = summary.total_staked/1000000000000000000
+        totalstaked = summary.total_staked/ONETESTFET
         print(f"Staked: {totalstaked} TESTFET")
- 
+ """
  
  #idealy should be sending funds from the FET wallet, on mainnet. but lets farm for now
 @farmer.on_message(model=TopupRequest)
@@ -100,19 +103,19 @@ async def request_funds(ctx: Context, sender: str, msg: TopupRequest):
     #print(f"📩 Sender wallet address received: {ctx.agent.wallet.address() }")
     #logging.info(f"📩 Sender wallet address received: {ctx.agent.wallet.address()}")
 
-    sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/1000000000000000000#ctx.agent.wallet.address()
+    sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/ONETESTFET#ctx.agent.wallet.address()
     ctx.logger.info({sender_balance})
     ##faucet.get_wealth(ctx.agent.wallet.address())#ctx.agent.wallet.address() msg.wal can be removed from the class
-    amo = int(msg.amount * 1000000000000000000) #5 TESTFET
+    amo = int(msg.amount * ONETESTFET) #5 TESTFET
     deno = 'atestfet'
     
     transaction = ctx.ledger.send_tokens("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf", amo, deno,farmer.wallet)
     
-    sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/1000000000000000000
-    sender_balance = sender_balance + amo/1000000000000000000
+    sender_balance = ledger.query_bank_balance(Address("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf"))/ONETESTFET
+    sender_balance = sender_balance + amo/ONETESTFET
     logging.info(f"📩 After funds received: {sender_balance}")
     #ctx.logger.info({sender_balance})
-    
+    await asyncio.sleep(5)
     #try:
     await ctx.send(sender, TopupResponse(status="Success!"))
   #  except Exception as e:

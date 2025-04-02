@@ -53,6 +53,7 @@ class SwaplandResponse(Model):
     
 class SwapCompleted(Model):
     status: str
+    message: str
 
 # Load environment variables from .env file
 load_dotenv()#this can be removed from here!
@@ -64,14 +65,14 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraifjowienowkewmmjnkjnnnkk"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraifjowieno123123123wkewmmjnkjnnnkk"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
 ![tag:swapland](https://img.shields.io/badge/swaplandbaseethusdc-01)
 ![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
 ![domain:swapland](https://img.shields.io/badge/swapland-01)
 
-<description>Swapland agent which uses uniswapV2 smart contract to SELL ETH (swap ETH into USDC) on base network.</description>
+<description> Sell ETH signal. Swapland agent which uses uniswapV2 smart contract to SELL ETH (swap ETH into USDC) on base network.</description>
 <use_cases>
     <use_case>Receives a value for amount of ETH that needs to be swapped into USDC on base network.</use_case>
 </use_cases>
@@ -93,7 +94,7 @@ def init_client():
             identity=client_identity,
             url="http://localhost:5012/api/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),
-            agent_title="Swapland ETH to USDC base agent",
+            agent_title="Swapland SELL signal:ETH to USDC base agent",
             readme=readme
         )
 
@@ -136,7 +137,7 @@ def webhook():
 
 
 #send to uAgent
-@app.route('/request', methods=['POST'])
+@flask_app.route('/request', methods=['POST'])
 def send_status():
     """Send payload to the selected agent based on provided address."""
     global agent_response
@@ -145,7 +146,7 @@ def send_status():
     try:
         # Parse the request payload
         #data = request.json
-        payload = {"status": "Successfully executed Swapland Agent to convert ETH to USDC!"}#data.get('payload')  # Extract the payload dictionary
+        payload = {"message": "Successfully executed Swapland Agent to convert ETH to USDC!", "status":"swapcompleted"}#data.get('payload')  # Extract the payload dictionary
 
         uagent_address = "agent1qfrhxny23vz62v5tr20qnmnjujq8k5t0mxgwdxfap945922t9v4ugqtqkea" #run the uagent.py copy the address and paste here
         

@@ -41,7 +41,8 @@ class RewardRequest(Model):
 class PaymentReceived(Model):
     status: str
 
-
+ONETESTFET =1000000000000000000
+UNCERTAINTYFET=10000000000000000 #to ease errors when stakign empties entire wallet
 AMOUNT = 6000000000000000000
 DENOM = "atestfet"
 REWARD = 2000000000000000000
@@ -60,7 +61,7 @@ async def introduce_agent(ctx: Context):
 
     logging.info("🚀 Agent startup complete.")
     ledger: LedgerClient = get_ledger()
-    agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))/1000000000000000000
+    agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))/ONETESTFET
     ctx.logger.info(f"My balance is {agent_balance} TESTFET")
     
 
@@ -89,7 +90,7 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
         ctx.logger.info(f"Transaction was unsuccessful: {coin_received}")
 
     ledger: LedgerClient = get_ledger()
-    agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/1000000000000000000
+    agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/ONETESTFET
     ctx.logger.info(f"Balance after receiving fees: {agent_balance} TESTFET")
 
     #storage to verify for reward
@@ -103,10 +104,10 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
     
     ledger_client = LedgerClient(NetworkConfig.fetchai_stable_testnet())
     summary = ledger_client.query_staking_summary(reward.wallet.address())
-    totalstaked = summary.total_staked/1000000000000000000
+    totalstaked = summary.total_staked/ONETESTFET
     ctx.logger.info(f"Received fees have been successfully staked.")
     ctx.logger.info(f"Staked: {totalstaked} TESTFET")
-    agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/1000000000000000000
+    agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/ONETESTFET
     ctx.logger.info(f"Available balance after stacking: {agent_balance} TESTFET")
 
 
@@ -135,7 +136,7 @@ async def message_handler(ctx: Context, sender: str, msg: PaymentReceived):
     if (msg.status == "reward"):
         ctx.logger.info(f"Payment transaction successful!")
         ledger: LedgerClient = get_ledger()
-        agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/1000000000000000000
+        agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/ONETESTFET
         #print(f"Balance after fees: {agent_balance} TESTFET")
         agent_balance = agent_balance - REWARD #there is a delay in showing the transaction :(
         ctx.logger.info(f"Balance after issuing reward: {agent_balance} TESTFET")
@@ -150,7 +151,7 @@ def stakystake():
     #faucet.get_wealth(farmer.wallet.address())
 
     agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))
-    converted_balance = agent_balance/1000000000000000000 - 10000000000000000
+    converted_balance = agent_balance/ONETESTFET - UNCERTAINTYFET
     #ctx.logger.info(f"Process stacking of: {converted_balance} TESTFET")
     #ctx.logger.info({agent_balance})
     
