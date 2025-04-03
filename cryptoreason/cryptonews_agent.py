@@ -55,7 +55,7 @@ agent = Agent(
 @agent.on_event("startup")
 async def startup(ctx: Context):
     """Initialize agent with a test request"""
-    ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
+    ctx.logger.info(f"Agent started: {ctx.agent.address}")
     
     #test it
     #response = get_recent_crypto_news()
@@ -70,48 +70,31 @@ def get_recent_crypto_news(limit: int = 1) -> CryptonewsResponse:
    
     crypto_news=""
     news_output=""
-    
+    extracted_data = []
     try:
-        newsapi = NewsApiClient(api_key="94b2d38f6b104eafa2f041bc323ed03c")#"NEWS_API_KEY"
-        #94b2d38f6b104eafa2f041bc323ed03c 1b523a692b7640858f842cd09acc67df
-        crypto_news = newsapi.get_everything(q="crypto OR cryptocurrency OR bitcoin OR ethereum OR recession OR FOMC OR crypto exchange OR bearish OR bullish",from_param=str(yesterday),to=str(today), sort_by = "relevancy", page=20, language="en")#recession, FOMC, crypto exchange, bearish, bullish, financial market
-        #we need to optimise the size, otherwise it may exceed ASI1 28000 tokens limit
-        # Parse the JSON string into a Python dictionary
-        #news are delayed by 1 day with free version
-        data = json.loads(crypto_news)
-
-        # Create NEWOUTPUT with only title, description, and content
-        news_output = {
-            "title": data["title"],
-            "description": data["description"],
-            "content": data["content"]
-        }
+        newsapi = NewsApiClient(api_key=NEWS_API_KEY)#"NEWS_API_KEY"
         
+        #already a dictionary
+        crypto_news = newsapi.get_everything(q="crypto OR cryptocurrency OR bitcoin OR ethereum OR recession OR FOMC OR crypto exchange OR bearish OR bullish",from_param=str(yesterday),to=str(today), sort_by = "relevancy", page_size=10, page=1, language="en")#recession, FOMC, crypto exchange, bearish, bullish, financial market
+        
+        logging.info(f"Found info: {crypto_news}")
+        #we need to optimise the size, otherwise it may exceed ASI1 28000 tokens limit
+        #news are delayed by 1 day with free version
+
+        articles = crypto_news['articles']
+        
+        for article in articles:
+            title = article.get('title')
+            description = article.get('description')
+            content = article.get('content')
+            extracted_data.append({'title': title, 'description': description})#'content':content
         
         
     except Exception as e:
         logging.error(f"❌ Couldnt connect to NEWS_API: {e}")
-        #response = requests.get(url, headers=headers, params=params)
-        #response.raise_for_status()  # Raises error for non-200 status codes
-        logging.info(f"Found info: {crypto_news}")
-        #raw_data = response.json()
-        #fear_greed_data = []
 
-        #for entry in raw_data.get("data", []):
-        #    data = FearGreedData(
-        #        value=entry["value"],
-        #        value_classification=entry["value_classification"],
-         #       timestamp=entry["timestamp"]
-         #   )
-        #    fear_greed_data.append(data)
-
-        #return FGIResponse(
-        #    data=fear_greed_data,
-        #    status="success",
-        #    timestamp=datetime.utcnow(timezone.utc).isoformat()
-        #)
         
-    return json.dumps(crypto_news) #news_output
+    return json.dumps(extracted_data) #news_output
             #status="success",
             #timestamp=datetime.now(timezone.utc).isoformat()
         

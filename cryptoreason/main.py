@@ -173,13 +173,6 @@ async def introduce_agent(ctx: Context):
 
 
 
-
-
-
-
-
-
-
 @agent.on_interval(period=24 * 60 * 60.0)  # Runs every 24 hours
 async def swapland_request(ctx: Context):
     """Requests market data for the monitored coin once a day."""
@@ -300,8 +293,8 @@ async def handle_coin_response(ctx: Context, sender: str, msg: CoinResponse):
     COININFORMATION = msg
     try:
         #temporary disabled cryptonews
-        await ctx.send(FGI_AGENT, FGIRequest()) #temporary call
-        #await ctx.send(CRYPTONEWS_AGENT, CryptonewsRequest()) #need to sent the data from this coin, change within 24 hours!
+        #await ctx.send(FGI_AGENT, FGIRequest()) #temporary call
+        await ctx.send(CRYPTONEWS_AGENT, CryptonewsRequest()) #need to sent the data from this coin, change within 24 hours!
     except Exception as e:
         logging.error(f"❌ Error sending CryptonewsRequest: {e}")
 
@@ -313,8 +306,8 @@ async def handle_cryptonews_response(ctx: Context, sender: str, msg: CryptonewsR
     logging.info(f"📩 Received CryptonewsResponse!")
     
     global CRYPTONEWSINFO
-    
     CRYPTONEWSINFO = msg
+    
     logging.info(f"📩 Sending request to FGI!")
     try:
         await ctx.send(FGI_AGENT, FGIRequest())
@@ -363,8 +356,9 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
     Blockchain network - {NETWORK}
     User's type of investing - {INVESTOR}
     User's risk strategy - {RISK}
-    User's opinion - {USERREASON}
+    Most recent crypto news - {CRYPTONEWSINFO}
     
+    User's opinion - {USERREASON}
     
     You are a crypto expert, who is assisting the user to make the most meaningful decisions, to gain the most revenue. 
     Given the following information, respond with decision of either "SELL", "BUY" or "HOLD" native token from given network. Inlcude your reasoning based on the analysed data and personal thoughts. Consider that the user cannot provide additional information. You could point out to questions which could help you making a solid decision.
@@ -394,8 +388,7 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
         Blockchain network - {NETWORK}
         User's type of investing - {INVESTOR}
         User's risk strategy - {RISK}
-        
-        
+        Most recent crypto news - {CRYPTONEWSINFO}
         
         User's opinion - {USERREASON}
         
@@ -418,8 +411,7 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
         Blockchain network - {NETWORK}
         User's type of investing - {INVESTOR}
         User's risk strategy - {RISK}
-        
-        
+        Most recent crypto news - {CRYPTONEWSINFO}        
         
         User's opinion - {USERREASON}   
         
@@ -438,7 +430,6 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
     
     amountt = 0;
     if (ASIITERATIONS == 0):
-    
         if (("SELL" in msg.decision) or ("BUY" in msg.decision)):
                 # i need to insert this after reason_agent(ASI1 llm) is done.
             try:
@@ -455,42 +446,16 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
                     amountt = 0.00007 #ETH to USDC
                 
                 chain = NETWORK
-                #money = input("How much would you like to swap?: ").lower()
-                #amountt = 0.1 #usdc to eth
-                #signall = "Buy" #usdc to eth
                 
-                #amountt = 0.0002 #SELL signal, ETH to USDC
-                #signall = "Sell" #eth to usdc
-                #all works, temporary disabled to test further
                 await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt, private_key = METAMASK_PRIVATE_KEY))
-                #print(f"Sent request") #stuck here
 
             except Exception as e:
                 logging.error(f"Failed to send request: {e}")
-    
         else:
             logging.info("⏳ HOLD decision received.")
             print("HOLD")
             #exit(1)
     
-"""
-        if "SELL" in msg.decision:
-            logging.critical("🚨 SELL SIGNAL DETECTED!")
-            print("SELL")
-            amountt = 0.0002 #SELL signal, ETH to USDC
-            #query ETH or coin price right now, and convert USD into COIN
-            #start search an run of ETH to USDC swap agent
-            
-        elif "BUY" in msg.decision:
-            logging.critical("✅ BUY SIGNAL DETECTED!")
-            print("BUY")
-            amountt = 0.1 #usdc to eth
-            chain = NETWORK
-            #convert amount from US dollars to USDC, which is equivalent.
-            #just pass amount as it is
-            #start search an run of USDC to ETH swap agent
-"""
-
 
 # Handle incoming messages with the SwaplandResponse model from ai agent swapfinder_agent
 @agent.on_message(model=SwaplandResponse)

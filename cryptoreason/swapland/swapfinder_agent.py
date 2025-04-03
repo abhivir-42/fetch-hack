@@ -143,7 +143,7 @@ def webhook():
         AMOUNT_TO_SWAP = message.payload['amount']
         
         global PRIVATE_KEY
-        PRIVATE_KEY = message.payload['privatekey']
+        PRIVATE_KEY = message.payload['private_key']
         
         logger.info(f"Processed response: {agent_response}")
         #how do i parse respons into variables? blockchain, signal, amount
