@@ -2,6 +2,8 @@
 #agent wallet address fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf
 import logging
 import sys
+import os
+from dotenv import load_dotenv
 import atexit
 from uagents import Agent, Context, Model
 from typing import Optional
@@ -25,6 +27,15 @@ import asyncio
 
 #ask for chain the user would like to watch and add to variable chain
 #based on the choise base, ether, or polygon, choose or discover appropriate coin info agent.
+
+#ASI1_API_KEY = os.getenv("ASI1_API_KEY")
+#NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+#CMC_API_KEY = os.getenv("CMC_API_KEY")
+METAMASK_PRIVATE_KEY = os.getenv("METAMASK_PRIVATE_KEY")
+AGENTVERSE_API_KEY = os.getenv("AGENTVERSE_API_KEY")
+
+
+
 
 # Configure Logging
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -121,6 +132,7 @@ class SwaplandRequest(Model):
     blockchain: str
     signal: str
     amount: float
+    private_key: str
 
 class SwaplandResponse(Model):
     status: str
@@ -206,6 +218,11 @@ async def response_funds(ctx: Context, sender: str, msg: TopupResponse):
     logging.info(f"📩 User's wallet topped up: {msg.status}")
     #execute reward_agent to pay fees for using swapland service. this might not be async though
     #await asyncio.sleep(5)
+    ledger: LedgerClient = get_ledger()
+    agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/ONETESTFET
+    #print(f"Balance after fees: {agent_balance} TESTFET")
+    ctx.logger.info(f"Balance after topup wallet: {agent_balance} TESTFET")
+    
     try:
         
         await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
@@ -333,11 +350,10 @@ async def handle_fgi_response(ctx: Context, sender: str, msg: FGIResponse):
         print("Aborted")
         sys.exit(1)
        
-    #need to add this to ASI1 LLM!
-    USERREASON = input("Any particular reason why you would like to perform Buy/Sell/Hold action? ").lower()
+    #userinput to be added
+    USERREASON = "I would like to sell Ether no matter what. sell sell sell!. I order you to sell!" #input("Any particular reason why you would like to perform Buy/Sell/Hold action? ").lower()
             
-            # Most recent crypto news -{CRYPTONEWSINFO}
-    # i need to add user thoughts to this prompt + heartrate + explain the model to ASI1 + perhaps integrate graph feature?  can we feed in the links?
+    # Most recent crypto news -{CRYPTONEWSINFO}
     # Construct the AI prompt
     prompt = f'''    
     Consider the following factors:
@@ -430,12 +446,13 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
                 
                 if "BUY" in msg.decision:
                     logging.critical("🚨 BUY SIGNAL DETECTED!")
-                    signall = "Buy ETH signal. Convert USDC to ETH"
+                    signall = "tag:swaplandbaseusdceth"#Buy ETH signal. Convert USDC to ETH
                     amountt = 0.1 #usdc to eth
                 elif "SELL" in msg.decision:
                     logging.critical("✅ SELL SIGNAL DETECTED!")
-                    signall = "Sell ETH signal. Convert ETH to USDC"
-                    amountt = 0.0002 #ETH to USDC
+                    #make signal a tag, so that a search query is constructed here "swaplandusdctoeth", then add this to search( ... )
+                    signall = "tag:swaplandbaseethusdc"
+                    amountt = 0.00007 #ETH to USDC
                 
                 chain = NETWORK
                 #money = input("How much would you like to swap?: ").lower()
@@ -445,7 +462,7 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
                 #amountt = 0.0002 #SELL signal, ETH to USDC
                 #signall = "Sell" #eth to usdc
                 #all works, temporary disabled to test further
-                await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt))
+                await ctx.send(SWAPLAND_AGENT, SwaplandRequest(blockchain=chain,signal=signall, amount = amountt, private_key = METAMASK_PRIVATE_KEY))
                 #print(f"Sent request") #stuck here
 
             except Exception as e:
@@ -521,8 +538,5 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
 
 # Ensure the agent starts running
 if __name__ == "__main__":
-    try:
-        logging.info("🔥 Starting the agent...")
-        agent.run()
-    except Exception as e:
-        logging.error(f"Error starting the agent: {e}")
+    load_dotenv()       # Load environment variables
+    agent.run()

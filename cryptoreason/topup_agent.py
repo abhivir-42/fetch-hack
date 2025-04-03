@@ -4,8 +4,9 @@ import logging
 from uagents.agent import AgentRepresentation #to use txn wallet
 from uagents.setup import fund_agent_if_low
 
-#from ai_engine import UAgentResponse, UAgentResponseType
 import sys
+import os
+from dotenv import load_dotenv
 
 from logging import Logger
 
@@ -123,5 +124,6 @@ async def request_funds(ctx: Context, sender: str, msg: TopupRequest):
 
 
 if __name__ == "__main__":
+    load_dotenv()       # Load environment variables
     farmer.run()
 

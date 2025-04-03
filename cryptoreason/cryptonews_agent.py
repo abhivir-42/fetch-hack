@@ -1,5 +1,6 @@
 #pip install newsapi-python
 import os
+from dotenv import load_dotenv
 import logging
 import sys
 import json
@@ -12,6 +13,8 @@ from newsapi import NewsApiClient
 from datetime import datetime, timedelta
 
 
+# Ensure API key is loaded
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 # Configure Logging
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -26,8 +29,7 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
     logging.error("🔥 Uncaught Exception:", exc_info=(exc_type, exc_value, exc_traceback))
 sys.excepthook = handle_unexpected_exception
 
-# Ensure API key is loaded
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+
 
 class FearGreedData(Model):
     value: float
@@ -125,9 +127,6 @@ async def handle_message(ctx: Context, sender: str, msg: CryptonewsRequest):
 
 
 if __name__ == "__main__":
-    try:
-        logging.info("🚀 Starting the CryptoNews agent...")
-        agent.run()
-    except Exception as e:
-        logging.error(f"❌ Fatal Error: {e}")
+    load_dotenv()       # Load environment variables
+    agent.run()
 

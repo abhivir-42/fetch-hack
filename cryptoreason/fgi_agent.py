@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import logging
 import sys
 import requests
@@ -129,8 +130,5 @@ async def handle_message(ctx: Context, sender: str, msg: FGIRequest):
 
 
 if __name__ == "__main__":
-    try:
-        logging.info("🚀 Starting the FGI agent...")
-        agent.run()
-    except Exception as e:
-        logging.error(f"❌ Fatal Error: {e}")
+    load_dotenv()       # Load environment variables
+    agent.run()

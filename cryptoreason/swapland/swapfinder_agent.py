@@ -13,8 +13,10 @@ from uuid import uuid4
 from llm_swapfinder import query_llm
 import requests
 
+import asyncio
+
  
-private_key = os.getenv("METAMASK_PRIVATE_KEY")
+#private_key = os.getenv("METAMASK_PRIVATE_KEY")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -27,11 +29,13 @@ CORS(app)
 client_identity = None
 
 AMOUNT_TO_SWAP = 0
+PRIVATE_KEY = ""
 
 class SwaplandRequest(Model):
     blockchain: str
     signal: str
     amount: float
+    private_key: str
 
 class SwaplandResponse(Model):
     status: str
@@ -80,7 +84,8 @@ def init_client():
         logger.info("Quickstart agent registration complete!")
         
         #debug
-        #search("BUY, ETH, Base") #test
+        #asyncio.sleep(5)
+        #search("tag:swaplandbaseethusdc") #test
         #call_swap("agent1qt40dnmucj0umdf5mryz6qgtmw4q0jrwlxu96h67ldfjgsvf5t9q2uch5hr", private_key)
         #usdcTOeth agent1qt40dnmucj0umdf5mryz6qgtmw4q0jrwlxu96h67ldfjgsvf5t9q2uch5hr
         #ethTOusdc agent1qgl5kptpr3x2t2fnuxnnyf5e8rum8n7u9ett0lv6pqd00k302d72gcygy32
@@ -137,11 +142,16 @@ def webhook():
         global AMOUNT_TO_SWAP
         AMOUNT_TO_SWAP = message.payload['amount']
         
+        global PRIVATE_KEY
+        PRIVATE_KEY = message.payload['privatekey']
+        
         logger.info(f"Processed response: {agent_response}")
         #how do i parse respons into variables? blockchain, signal, amount
         send_data() #send response status
         
-        search(agent_response) #debug to be enabled
+        signalsearch = message.payload['signal']
+        
+        search(signalsearch) #debug to be enabled
         
         return jsonify({"status": "success"})
 
@@ -154,8 +164,11 @@ def search(query):
     # Search for agents matching the query
     # API endpoint and payload
     api_url = "https://agentverse.ai/v1/search/agents"
+    
+    
+    logger.info(f"Search text: {query}")
     payload = {
-        "search_text": "tag:swapland",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
+        "search_text": str(query),#'<query>', tag:{tagid} tag:swaplandbaseethusdc
         "sort": "relevancy",
         "direction": "asc",
         "offset": 0,
@@ -193,7 +206,7 @@ def search(query):
             Readme: {agent.get("readme")}
             {"-" * 50}
             '''
-            logger.info(f"{prompt}")
+            #logger.info(f"{prompt}")
 
         #print(prompt)  # Debugging log
         logger.info("Request sent to ASI1 model to evaluate the list of discovered agents..")
@@ -201,29 +214,29 @@ def search(query):
                 
         logger.info(f"{response}")
 
-        #call_swap(str(response,metamask_key))
-        call_swap(str(response), private_key) # need to test this
+        call_swap(str(response), PRIVATE_KEY) # need to test this
 
         logger.info("Program completed")
 
-        #send_data() #send response status confirming that execution uniswap agent has been called
     else:
         logger.info(f"Request failed with status code {response.status_code}")
 
     return {"status": "Agent searched"}
 
 
-#@app.route('/api/call-swap', methods=['POST'])
+
 def call_swap(swapaddress : str, metamask_key : str):
    """Send payload to the selected agent based on provided address."""
    try:
        # Parse the request payload
+       #AMOUNT_TO_SWAP = 0.0001
        payload = {
         "variable": "swapland something",#'<query>', tag:{tagid} tag:swaplandbaseethusdc
-        "metamask_key": metamask_key,
+        "metamask_key": metamask_key,#metamask_key
         "amount": AMOUNT_TO_SWAP
         }
         
+
        agent_address = swapaddress
        logger.info(f"Sending payload to agent: {swapaddress}")
 
@@ -237,11 +250,6 @@ def call_swap(swapaddress : str, metamask_key : str):
    except Exception as e:
        logger.error(f"Error sending data to agent: {e}")
        return jsonify({"error": str(e)}), 500
-
-
-
-
-
 
 
 

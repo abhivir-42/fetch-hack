@@ -23,6 +23,9 @@ import time
 from cosmpy.aerial.config import NetworkConfig
 from cosmpy.aerial.wallet import LocalWallet
 
+import os
+from dotenv import load_dotenv
+
  
 class PaymentRequest(Model):
     wallet_address: str
@@ -179,5 +182,6 @@ def stakystake():
 
  
 if __name__ == "__main__":
+    load_dotenv()       # Load environment variables
     reward.run()
  

@@ -41,15 +41,6 @@ CORS(flask_app)
 
 # Initialising client identity to get registered on agentverse
 client_identity = None
-
-
-class SwaplandRequest(Model):
-    blockchain: str
-    signal: str
-    amount: float
-
-class SwaplandResponse(Model):
-    status: str
     
 class SwapCompleted(Model):
     status: str

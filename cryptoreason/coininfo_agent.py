@@ -3,6 +3,8 @@ import logging
 import sys
 import requests
 import atexit
+import os
+from dotenv import load_dotenv
 from uagents import Agent, Context, Model
 
 # Configure Logging
@@ -47,8 +49,8 @@ def get_crypto_info(blockchain: str) -> CoinResponse:
             coin_id = "matic-network"
         case _:
             raise ValueError(f"Unsupported blockchain: {blockchain}")  # Handle unexpected inputs
-            #what would happen to the execution in this case?
-        
+
+
     """Fetch cryptocurrency information from CoinGecko API"""
     
     url = f"https://api.coingecko.com/api/v3/coins/{coin_id}"
@@ -105,9 +107,5 @@ async def handle_message(ctx: Context, sender: str, msg: CoinRequest):
     return response
 
 if __name__ == "__main__":
-    try:
-        logging.info("🚀 Starting the CoinInfoAgent...")
-        agent.run()
-        
-    except Exception as e:
-        logging.error(f"❌ Fatal Error: {e}")
+    load_dotenv()       # Load environment variables
+    agent.run()
