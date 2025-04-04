@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from uagents_core.crypto import Identity
+#from uagents_core.crypto import Identity
+from uagents_core.identity import Identity
 from fetchai import fetch
 from fetchai.registration import register_with_agentverse
 from fetchai.communication import parse_message_from_agent, send_message_to_agent

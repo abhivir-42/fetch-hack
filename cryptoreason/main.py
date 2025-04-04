@@ -51,6 +51,7 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
 sys.excepthook = handle_unexpected_exception
 
 # Agentverse agent addresses
+HEARTBEAT_AGENT="agent1q0jnt3skqqrpj3ktu23ljy3yx5uvp7lgz2cdku3vdrslh2w8kw7vvstpv73"
 COIN_AGENT="agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq"
 FGI_AGENT="agent1qgzh245lxeaapd32mxlwgdf2607fkt075hymp06rceknjnc2ylznwdv8up7"
 REASON_AGENT="agent1qwlg48h8sstknk7enc2q44227ahq6dr5mjg0p7z62ca6tfueze38kyrtyl2"
@@ -61,6 +62,9 @@ REWARD_AGENT="agent1qde8udnttat2mmq3srkrz60wm3248yg43528wy2guwyewtesd73z7x3swru"
 
 
 ### AGENTVERSE INTERACTION CLASSES ###
+class Heartbeat(Model):
+    status: str
+
 class CoinRequest(Model):
     blockchain: str
 
@@ -172,36 +176,43 @@ async def introduce_agent(ctx: Context):
 
 
 
-
 @agent.on_interval(period=24 * 60 * 60.0)  # Runs every 24 hours
 async def swapland_request(ctx: Context):
-    """Requests market data for the monitored coin once a day."""
-    
+    """Confirm that the user is calm and not overexcited"""
     await asyncio.sleep(15)
-    #execute topup_agent to receive funds
+    #need to check the heartbeat data
+    await ctx.send(HEARTBEAT_AGENT, Heartbeat(status="ready"))
     
-    #user input required
-    topupwallet = "yes"#input("Would you like to top up your agent wallet?[yes/no]: ").lower()
-    if (topupwallet == "yes"):
+
+
+# Waits for completion of heartbeat agent.
+@agent.on_message(model=Heartbeat)
+async def message_handler(ctx: Context, sender: str, msg: Heartbeat):
+    if (msg.status == "continue"):
+        ctx.logger.info(f"Received response{msg.status}. Lets trade")
         
+        #execute topup_agent to receive funds
         #user input required
-        topupamount = 10#input("How many FET to transfer over?: ").lower()#convert from string to float
-        
-        fetchwall= (str)(agent.wallet.address())
-        await ctx.send(TOPUP_AGENT, TopupRequest(amount=topupamount, wal=fetchwall))
+        topupwallet = "yes"#input("Would you like to top up your agent wallet?[yes/no]: ").lower()
+        if (topupwallet == "yes"):
+            
+            #user input required
+            topupamount = 10#input("How many FET to transfer over?: ").lower()#convert from string to float
+            
+            fetchwall= (str)(agent.wallet.address())
+            await ctx.send(TOPUP_AGENT, TopupRequest(amount=topupamount, wal=fetchwall))
+        else:
+            #execute reward_agent to pay fees for using swapland service. this might not be async though
+            try:
+                await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
+                ctx.logger.info(f"Ready to pay status sent")
+            except Exception as e:
+                logging.error(f"Failed to send request to reward_Agent to pay fees for using swapland services: {e}")
+
     else:
-        #execute reward_agent to pay fees for using swapland service. this might not be async though
-        try:
-            await ctx.send(REWARD_AGENT, PaymentInquiry(ready = "ready"))
-            ctx.logger.info(f"Ready to pay status sent")
-        except Exception as e:
-            logging.error(f"Failed to send request to reward_Agent to pay fees for using swapland services: {e}")
-    
-    #check balance here
-    #debugflag = input("wait fro the next step!..").lower()
-    
-    #debugflag = input("wait fro the next step!..").lower()
-    #ctx.logger.info(f"Reward request sent..")
+        ctx.logger.info(f"Canceling the process..: {msg.status}")
+        
+
 
 
 #main agent received requested funds
