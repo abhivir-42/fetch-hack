@@ -1,0 +1,9 @@
+2025-04-05 06:30:44,934 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-05 06:30:45,868 uagents_core.utils.registration ERROR Error submitting request
+Traceback (most recent call last):
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/uagents_core/utils/registration.py", line 51, in _send_post_request
+    response.raise_for_status()
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/requests/models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 409 Client Error: Conflict for url: https://agentverse.ai/v1/agents
+2025-04-05 06:30:45,870 uagents_core.utils.registration ERROR Error registering agent with Agentverse

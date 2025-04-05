@@ -1,0 +1,255 @@
+2025-04-05 14:24:34,259 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:24:34,259 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:24:35,226 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:24:35,731 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:24:36,588 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:24:37,093 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:24:37,921 - __main__ - INFO - Successfully fetched data for solana
+2025-04-05 14:24:38,422 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:24:39,267 - __main__ - INFO - Successfully fetched data for avalanche-2
+2025-04-05 14:24:39,772 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+Starting CryptoFund API Server on port 8000...
+ * Serving Flask app 'working_api_server'
+ * Debug mode: on
+2025-04-05 14:24:39,807 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://192.168.0.136:8000
+2025-04-05 14:24:39,807 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-05 14:24:39,808 - werkzeug - INFO -  * Restarting with stat
+2025-04-05 14:24:39,996 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:24:39,996 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:24:40,373 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:24:40,877 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:24:40,946 - __main__ - WARNING - Rate limited by CoinGecko API for ethereum
+2025-04-05 14:24:40,946 - __main__ - INFO - Added simulated data for ethereum due to rate limiting
+2025-04-05 14:24:41,450 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:24:43,908 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:24:43,908 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:24:44,409 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:24:44,587 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:24:44,588 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:24:45,090 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:24:45,139 - werkzeug - WARNING -  * Debugger is active!
+2025-04-05 14:24:45,159 - werkzeug - INFO -  * Debugger PIN: 103-055-042
+2025-04-05 14:24:45,180 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:24:45,180 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:24:45,253 - __main__ - WARNING - Rate limited by CoinGecko API for bitcoin
+2025-04-05 14:24:45,253 - __main__ - INFO - Added simulated data for bitcoin due to rate limiting
+2025-04-05 14:24:45,758 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:24:45,851 - __main__ - WARNING - Rate limited by CoinGecko API for ethereum
+2025-04-05 14:24:45,851 - __main__ - INFO - Added simulated data for ethereum due to rate limiting
+2025-04-05 14:24:46,351 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:24:46,444 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:24:46,444 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:24:46,949 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:24:47,023 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:24:47,023 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:24:47,524 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:24:47,527 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:24:47] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:24:53,943 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:24:53] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:24:53,947 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:24:53,948 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:24:54,049 - __main__ - WARNING - Rate limited by CoinGecko API for bitcoin
+2025-04-05 14:24:54,049 - __main__ - INFO - Added simulated data for bitcoin due to rate limiting
+2025-04-05 14:24:54,554 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:24:54,605 - __main__ - WARNING - Rate limited by CoinGecko API for ethereum
+2025-04-05 14:24:54,605 - __main__ - INFO - Added simulated data for ethereum due to rate limiting
+2025-04-05 14:24:55,110 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:24:55,200 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:24:55,200 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:24:55,705 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:24:55,768 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:24:55,768 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:24:56,273 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:24:56,275 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:24:56] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:24:56,282 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:24:56] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:24:56,288 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:24:56] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:24:56,295 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:24:56] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:24:56,298 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:24:56] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:25:04,451 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:25:04,451 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:25:04,518 - __main__ - WARNING - Rate limited by CoinGecko API for bitcoin
+2025-04-05 14:25:04,518 - __main__ - INFO - Added simulated data for bitcoin due to rate limiting
+2025-04-05 14:25:05,020 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:25:05,079 - __main__ - WARNING - Rate limited by CoinGecko API for ethereum
+2025-04-05 14:25:05,079 - __main__ - INFO - Added simulated data for ethereum due to rate limiting
+2025-04-05 14:25:05,582 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:25:05,654 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:25:05,654 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:25:06,160 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:25:06,355 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:25:06,355 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:25:06,856 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:25:06,857 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:06] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:25:24,037 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:24] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:25:24,041 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:25:24,041 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:25:24,097 - __main__ - WARNING - Rate limited by CoinGecko API for bitcoin
+2025-04-05 14:25:24,097 - __main__ - INFO - Added simulated data for bitcoin due to rate limiting
+2025-04-05 14:25:24,598 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:25:24,670 - __main__ - WARNING - Rate limited by CoinGecko API for ethereum
+2025-04-05 14:25:24,670 - __main__ - INFO - Added simulated data for ethereum due to rate limiting
+2025-04-05 14:25:25,175 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:25:25,236 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:25:25,236 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:25:25,739 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:25:25,890 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:25:25,890 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:25:26,391 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:25:26,392 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:26] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:25:26,400 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:26] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:25:26,404 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:26] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:25:26,412 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:26] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:25:26,417 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:26] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:25:54,039 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:25:54] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:25:54,044 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:25:54,045 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:25:55,003 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:25:55,508 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:25:56,425 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:25:56,931 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:25:58,733 - __main__ - INFO - Successfully fetched data for solana
+2025-04-05 14:25:59,235 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:26:00,124 - __main__ - INFO - Successfully fetched data for avalanche-2
+2025-04-05 14:26:00,626 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:26:00,627 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:00] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:26:00,632 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:00] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:26:00,636 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:00] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:26:00,643 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:00] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:26:00,649 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:00] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:26:10,446 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:10] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:26:10,449 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:26:10,449 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:26:10,528 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:26:11,033 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:26:11,112 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:26:11,614 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:26:11,666 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:26:11,666 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:26:12,171 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:26:12,250 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:26:12,250 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:26:12,753 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:26:12,755 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:12] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:26:24,135 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:24] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:26:24,140 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:26:24,141 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:26:24,219 - __main__ - WARNING - Rate limited by CoinGecko API for bitcoin
+2025-04-05 14:26:24,219 - __main__ - INFO - Added simulated data for bitcoin due to rate limiting
+2025-04-05 14:26:24,724 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:26:24,796 - __main__ - WARNING - Rate limited by CoinGecko API for ethereum
+2025-04-05 14:26:24,796 - __main__ - INFO - Added simulated data for ethereum due to rate limiting
+2025-04-05 14:26:25,297 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:26:25,384 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:26:25,385 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:26:25,890 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:26:25,934 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:26:25,934 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:26:26,436 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:26:26,437 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:26] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:26:26,445 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:26] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:26:26,450 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:26] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:26:26,457 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:26] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:26:26,462 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:26:26] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:27:01,617 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:01] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:27:01,621 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:27:01,621 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:27:01,676 - __main__ - WARNING - Rate limited by CoinGecko API for bitcoin
+2025-04-05 14:27:01,676 - __main__ - INFO - Added simulated data for bitcoin due to rate limiting
+2025-04-05 14:27:02,181 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:27:02,310 - __main__ - WARNING - Rate limited by CoinGecko API for ethereum
+2025-04-05 14:27:02,310 - __main__ - INFO - Added simulated data for ethereum due to rate limiting
+2025-04-05 14:27:02,815 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:27:03,861 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:27:03,861 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:27:04,365 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:27:04,476 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:27:04,476 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:27:04,981 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:27:04,982 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:04] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:27:04,990 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:04] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:27:04,994 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:04] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:27:05,001 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:05] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:27:05,006 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:05] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:27:37,628 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:37] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:27:37,633 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:27:37,633 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:27:37,968 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:27:38,473 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:27:39,217 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:27:39,722 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:27:40,593 - __main__ - INFO - Successfully fetched data for solana
+2025-04-05 14:27:41,094 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:27:41,517 - __main__ - INFO - Successfully fetched data for avalanche-2
+2025-04-05 14:27:42,023 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:27:42,024 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:42] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:27:42,031 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:42] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:27:42,036 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:42] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:27:42,044 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:42] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:27:42,049 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:27:42] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:28:12,118 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:28:12] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:28:12,122 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:28:12,122 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:28:12,961 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:28:13,466 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:28:13,848 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:28:14,354 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:28:14,406 - __main__ - WARNING - Rate limited by CoinGecko API for solana
+2025-04-05 14:28:14,406 - __main__ - INFO - Added simulated data for solana due to rate limiting
+2025-04-05 14:28:14,911 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:28:14,985 - __main__ - WARNING - Rate limited by CoinGecko API for avalanche-2
+2025-04-05 14:28:14,985 - __main__ - INFO - Added simulated data for avalanche-2 due to rate limiting
+2025-04-05 14:28:15,487 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:28:15,488 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:28:15] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:28:15,503 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:28:15] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:28:15,507 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:28:15] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:28:15,540 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:28:15] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:28:15,544 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:28:15] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:29:21,992 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:29:21] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:29:21,996 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:29:21,996 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:29:23,440 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:29:23,943 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:29:24,358 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:29:24,863 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:29:25,255 - __main__ - INFO - Successfully fetched data for solana
+2025-04-05 14:29:25,760 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:29:28,104 - __main__ - INFO - Successfully fetched data for avalanche-2
+2025-04-05 14:29:28,609 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:29:28,611 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:29:28] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:29:28,627 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:29:28] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:29:28,633 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:29:28] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:29:28,642 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:29:28] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:29:28,648 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:29:28] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:31:21,621 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:31:21] "OPTIONS /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:31:21,627 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:31:21,628 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:31:21,988 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:31:22,492 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:31:22,898 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:31:23,402 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:31:23,779 - __main__ - INFO - Successfully fetched data for solana
+2025-04-05 14:31:24,284 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:31:24,698 - __main__ - INFO - Successfully fetched data for avalanche-2
+2025-04-05 14:31:25,203 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:31:25,204 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:31:25] "GET /api/market/data HTTP/1.1" 200 -
+2025-04-05 14:31:25,210 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:31:25] "OPTIONS /api/agents HTTP/1.1" 200 -
+2025-04-05 14:31:25,213 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:31:25] "GET /api/agents HTTP/1.1" 200 -
+2025-04-05 14:31:25,218 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:31:25] "OPTIONS /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:31:25,220 - werkzeug - INFO - 127.0.0.1 - - [05/Apr/2025 14:31:25] "GET /api/heartbeat HTTP/1.1" 200 -
+2025-04-05 14:45:22,000 - werkzeug - INFO -  * Detected change in '/Users/abhivir42/projects/fetch-hack/cryptoreason/__init__.py', reloading
+Starting CryptoFund API Server on port 8000...
+2025-04-05 14:45:22,038 - werkzeug - INFO -  * Restarting with stat
+2025-04-05 14:45:22,311 - __main__ - INFO - Found coin agent at: agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq
+2025-04-05 14:45:22,312 - __main__ - INFO - Fetching data for bitcoin
+2025-04-05 14:45:23,209 - __main__ - INFO - Successfully fetched data for bitcoin
+2025-04-05 14:45:23,710 - __main__ - INFO - Fetching data for ethereum
+2025-04-05 14:45:24,153 - __main__ - INFO - Successfully fetched data for ethereum
+2025-04-05 14:45:24,658 - __main__ - INFO - Fetching data for solana
+2025-04-05 14:45:25,238 - __main__ - INFO - Successfully fetched data for solana
+2025-04-05 14:45:25,743 - __main__ - INFO - Fetching data for avalanche-2
+2025-04-05 14:45:26,261 - __main__ - INFO - Successfully fetched data for avalanche-2
+2025-04-05 14:45:26,766 - __main__ - INFO - Returning market data for 4 cryptocurrencies
+2025-04-05 14:45:26,796 - werkzeug - WARNING -  * Debugger is active!
+2025-04-05 14:45:26,803 - werkzeug - INFO -  * Debugger PIN: 103-055-042
