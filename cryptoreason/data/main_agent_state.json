@@ -1,0 +1,11 @@
+{
+  "network": "base",
+  "risk_profile": "moderate",
+  "investor_type": "balanced",
+  "coin_data": {},
+  "crypto_news": "",
+  "fear_greed_index": "",
+  "heartbeat_status": "unknown",
+  "pending_transactions": [],
+  "completed_transactions": []
+}
