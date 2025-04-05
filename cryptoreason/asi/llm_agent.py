@@ -1,90 +1,118 @@
-import requests
-import os
+"""
+ASI1 reasoning agent for crypto trading decisions.
+"""
 import logging
-import sys
-from uagents import Agent, Context, Model
-from dotenv import load_dotenv
+import requests
+from uagents import Context
 
-# Load environment variables from a .env file
-load_dotenv()
+from cryptoreason.common.base_agent import BaseAgent
+from cryptoreason.common.models import ASI1Request, ASI1Response
+from cryptoreason.common.config import Config
+from cryptoreason.common.errors import APIError, retry
 
-# Retrieve the API key from environment variables
-api_key = os.getenv("ASI1_API_KEY")
+logger = logging.getLogger(__name__)
 
-# ASI1-Mini LLM API endpoint
-url = "https://api.asi1.ai/v1/chat/completions"
 
-# Define headers for API requests, including authentication
-headers = {
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {api_key}"
-}
-
-agent = Agent(
-    name="ASI1 Reasoning agent to sell/buy crypto",
-    port=8007,
-    seed="LOLOLO lets buy some crypto letsgo",
-    endpoint=["http://127.0.0.1:8007/submit"],
-    )
-
-class ASI1Request(Model):
-    query: str
-    
-class ASI1Response(Model):
-    decision: str
-    
-    
-    
-    
-@agent.on_event("startup")
-async def introduce_agent(ctx: Context):
-    """Logs agent startup details."""
-    logging.info(f"✅ Agent started: {ctx.agent.address}")
-    print(f"Hello! I'm {agent.name} and my address is {agent.address}.")
-    logging.info("🚀 Agent startup complete.")
-    
-    
-@agent.on_message(model=ASI1Request)
-async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Request):
-    ctx.logger.info(f"📩 Received message from {sender}: Analysing crypto sentiment..")
+class ASI1Agent(BaseAgent):
     """
-    Queries the ASI1-Mini LLM with a given prompt and returns the model's response.
-
-    Parameters:
-        query (str): The input question or statement for the language model.
-
-    Returns:
-        str: The response from the LLM.
-    
-    If an error occurs during the request, the function returns the exception object.
+    ASI1 reasoning agent that analyzes market data and makes trading decisions.
     """
-    data = {
-        "messages": [{"role": "user", "content": msg.query}],  # User input for the chat model
-        "conversationId": None,  # No conversation history tracking
-        "model": "asi1-mini"  # Specifies the model version to use
-    }
-
-    try:
-        # Send a POST request to the LLM API with the input query
-        with requests.post(url, headers=headers, json=data) as response:
-            output = response.json()  # Parse the JSON response
-            logging.info(f"Output from json: {output}")
-            # Extract and return the generated message content
-            sendresponse = output["choices"][0]["message"]["content"]
     
-    except requests.exceptions.RequestException as e:
-        # Handle and return any request-related exceptions (e.g., network errors)
-        sendresponse = str(e)
-
-    try:
-        await ctx.send(sender, ASI1Response(decision=sendresponse))
-    except Exception as e:
-        logging.error(f"❌ Error sending ASI1Response: {e}")
-    ctx.logger.info(f"✅ Decision sent back to sender: {sender}")
+    def __init__(self):
+        """Initialize the ASI1 reasoning agent."""
+        super().__init__(
+            name="ASI1 Reasoning Agent",
+            port=8007,
+            seed="crypto_reasoning_agent_seed",
+        )
+        
+        # Register message handlers
+        self.register_message_handler(ASI1Request, self.handle_asi1_query)
+        
+        # API endpoint for ASI1-Mini LLM
+        self.api_url = "https://api.asi1.ai/v1/chat/completions"
+        
+        # API headers with authentication
+        self.headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {Config.ASI1_API_KEY}"
+        }
     
-# Ensure the agent starts running
+    @retry(max_retries=3, delay=1)
+    async def query_llm(self, prompt: str) -> str:
+        """
+        Query the ASI1-Mini LLM with the given prompt.
+        
+        Args:
+            prompt: Input prompt for the LLM
+            
+        Returns:
+            LLM response
+            
+        Raises:
+            APIError: If the API request fails
+        """
+        data = {
+            "messages": [{"role": "user", "content": prompt}],
+            "conversationId": None,
+            "model": "asi1-mini"
+        }
+        
+        try:
+            response = requests.post(
+                self.api_url,
+                headers=self.headers,
+                json=data,
+                timeout=Config.API_TIMEOUT
+            )
+            response.raise_for_status()
+            
+            output = response.json()
+            logger.debug(f"LLM response: {output}")
+            
+            return output["choices"][0]["message"]["content"]
+            
+        except requests.exceptions.RequestException as e:
+            logger.error(f"LLM API request failed: {e}")
+            raise APIError(f"LLM API request failed: {e}")
+    
+    async def handle_asi1_query(self, ctx: Context, sender: str, msg: ASI1Request):
+        """
+        Handle ASI1 query requests.
+        
+        Args:
+            ctx: Agent context
+            sender: Sender address
+            msg: ASI1 query message
+        """
+        ctx.logger.info(f"Received message from {sender}: Analysing crypto sentiment..")
+        
+        try:
+            # Query the LLM with the provided prompt
+            response = await self.query_llm(msg.query)
+            
+            # Send the response back to the sender
+            await self.send_message(
+                ctx,
+                sender,
+                ASI1Response(decision=response)
+            )
+            
+            ctx.logger.info(f"Decision sent back to sender: {sender}")
+            
+        except Exception as e:
+            logger.error(f"Error handling ASI1 query: {e}")
+            
+            # Send an error response
+            error_msg = f"Error processing query: {str(e)}"
+            await self.send_message(
+                ctx,
+                sender,
+                ASI1Response(decision=error_msg)
+            )
+
+
+# Initialize and run the agent if executed directly
 if __name__ == "__main__":
-    try:
-        agent.run()
-    except Exception as e:
-        logging.error(f"❌ Error starting the agent: {e}")
+    agent = ASI1Agent()
+    agent.run()
