@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import logging
 import sys
 import requests
@@ -42,10 +43,12 @@ class FGIResponse(Model):
 # Initialize Agent
 agent = Agent(
     name="FGIagent",
-    port=8010,
+    port=8006,
     seed="fgi_agent1_secret_phrase",
-    endpoint=["http://127.0.0.1:8010/submit"],
+    endpoint=["http://127.0.0.1:8006/submit"],
     )
+    
+    
 
 @agent.on_event("startup")
 async def startup(ctx: Context):
@@ -53,7 +56,7 @@ async def startup(ctx: Context):
     ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
     #dummy_request = FGIRequest(limit=1)
     #await process_response(ctx, dummy_request)
-    
+
     
 def get_fear_and_greed_index(limit: int = 1) -> FGIResponse:
     """Fetch Fear and Greed index data from CoinMarketCap API"""
@@ -127,8 +130,5 @@ async def handle_message(ctx: Context, sender: str, msg: FGIRequest):
 
 
 if __name__ == "__main__":
-    try:
-        logging.info("🚀 Starting the FGI agent...")
-        agent.run()
-    except Exception as e:
-        logging.error(f"❌ Fatal Error: {e}")
+    load_dotenv()       # Load environment variables
+    agent.run()

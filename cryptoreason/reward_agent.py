@@ -1,5 +1,6 @@
-#this agent receives funds from main, together with FET wallet, and stores it using storage. this would prove that transaction was made. i think.
 #this agent receives request to get the reward. upon request it checks storage fet, and send the , confirms with given agent address and sends the reward. test tokens for now
+#requests fees as 6 TESTFET
+#rewards main agent with 2 TESTFET
 
 import logging
 from uagents import Agent, Context, Model
@@ -22,6 +23,9 @@ import time
 from cosmpy.aerial.config import NetworkConfig
 from cosmpy.aerial.wallet import LocalWallet
 
+import os
+from dotenv import load_dotenv
+
  
 class PaymentRequest(Model):
     wallet_address: str
@@ -33,35 +37,39 @@ class TransactionInfo(Model):
 
 class PaymentInquiry(Model):
     ready: str
- #ctx.agent.wallet.address()
  
 class RewardRequest(Model):
-    ready: str
+    status: str
 
 class PaymentReceived(Model):
     status: str
 
-
-AMOUNT = 1000000000000000000
+ONETESTFET =1000000000000000000
+UNCERTAINTYFET=10000000000000000 #to ease errors when stakign empties entire wallet
+AMOUNT = 6000000000000000000
 DENOM = "atestfet"
-#DENOM = "afet"
+REWARD = 2000000000000000000
 
-reward = Agent(name="reward", seed="reward secret phrase agent oekwpfokw", port=8008, endpoint=["http://127.0.0.1:8008/submit"])
+
+reward = Agent(name="Reward agent", seed="reward secret phrase agent oekwpfokw", port=8003, endpoint=["http://127.0.0.1:8003/submit"])
  
 fund_agent_if_low(reward.wallet.address(), min_balance=AMOUNT)
- 
+
  
 @reward.on_event("startup")
 async def introduce_agent(ctx: Context):
     """Logs agent startup details."""
     logging.info(f"✅ Agent started: {ctx.agent.address}")
-    print(f"Hello! I'm {reward.name} and my address is {reward.address}, my wallet address {reward.wallet.address()} ")
+    ctx.logger.info(f"MHello! I'm {reward.name} and my address is {reward.address}, my wallet address {reward.wallet.address()} ")
+
     logging.info("🚀 Agent startup complete.")
     ledger: LedgerClient = get_ledger()
-    agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))/1000000000000000000
-    print(f"My balance is {agent_balance} TESTFET")
+    agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))/ONETESTFET
+    ctx.logger.info(f"My balance is {agent_balance} TESTFET")
     
-    
+
+
+#main agent inquires to proceed with fees payment
 @reward.on_message(model=PaymentInquiry)
 async def send_payment(ctx: Context, sender: str, msg: PaymentInquiry):
     ctx.logger.info(f"Received payment request from {sender}: {msg}")
@@ -69,6 +77,7 @@ async def send_payment(ctx: Context, sender: str, msg: PaymentInquiry):
         await ctx.send(sender,PaymentRequest(wallet_address=str(reward.wallet.address()), amount=AMOUNT, denom=DENOM))#str(ctx.agent.address)
 
 
+#successfully received fees from main agent
 @reward.on_message(model=TransactionInfo)
 async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
     ctx.logger.info(f"Received transaction info from {sender}: {msg}")
@@ -84,37 +93,74 @@ async def confirm_transaction(ctx: Context, sender: str, msg: TransactionInfo):
         ctx.logger.info(f"Transaction was unsuccessful: {coin_received}")
 
     ledger: LedgerClient = get_ledger()
-    agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))/1000000000000000000
-    print(f"Balance after fees: {agent_balance} TESTFET")
-    
+    agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/ONETESTFET
+    ctx.logger.info(f"Balance after receiving fees: {agent_balance} TESTFET")
+
     #storage to verify for reward
-    local_ledger = {"agent_address":reward.address, "tx":msg.tx_hash}
-    ctx.storage.set("{ctx.agent.wallet.address()}", local_ledger)
+    local_ledger = {"agent_address":sender, "tx":msg.tx_hash}
+    ctx.storage.set("{ctx.agent.address}", local_ledger)#{ctx.agent.wallet.address()}
     
     await ctx.send(sender,PaymentReceived(status="success"))#str(ctx.agent.address)
     #ctx.logger.info(ctx.storage.get("Passkey"))
     stakystake() #stake received amount of funds
+    
+    
+    ledger_client = LedgerClient(NetworkConfig.fetchai_stable_testnet())
+    summary = ledger_client.query_staking_summary(reward.wallet.address())
+    totalstaked = summary.total_staked/ONETESTFET
+    ctx.logger.info(f"Received fees have been successfully staked.")
+    ctx.logger.info(f"Staked: {totalstaked} TESTFET")
+    agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/ONETESTFET
+    ctx.logger.info(f"Available balance after stacking: {agent_balance} TESTFET")
 
 
+#main agent completed execution and requests the reward
 @reward.on_message(model=RewardRequest)
 async def request_reward(ctx: Context, sender: str, msg: RewardRequest):
-    ctx.logger.info(ctx.storage.get("{ctx.address}"))
-    #now i need jsonify it?
-    #what is the difference between ctx: Context and sender:str ; ctx.address?
+    #fund_agent_if_low(reward.wallet.address(), min_balance=REWARD)
+    if msg.status == "reward":
+        check = ctx.storage.get("{ctx.agent.address}")
+        if (check['agent_address'] == sender):
+            transaction = ctx.ledger.send_tokens("fetch1p78qz25eeycnwvcsksc4s7qp7232uautlwq2pf", REWARD, DENOM, reward.wallet)#send the reward
+            await ctx.send(sender, TransactionInfo(tx_hash=transaction.tx_hash))#str(ctx.agent.address)
+
+            ctx.logger.info(f"Reward has been issued!")
+            ctx.storage.remove("ctx.agent.address")#{ctx.agent.wallet.address()} #verification of completed transaction
+            #ctx.logger.info(f"Reward storage cleared")
+        else:
+            ctx.logger.info(f"Transaction not found!")
+    else:
+        ctx.logger.info(f"Incorrect status received!")
+    
+
+#when main agent receives the reward
+@reward.on_message(model=PaymentReceived)
+async def message_handler(ctx: Context, sender: str, msg: PaymentReceived):
+    if (msg.status == "reward"):
+        ctx.logger.info(f"Payment transaction successful!")
+        ledger: LedgerClient = get_ledger()
+        agent_balance = (ledger.query_bank_balance(Address(reward.wallet.address())))/ONETESTFET
+        #print(f"Balance after fees: {agent_balance} TESTFET")
+        agent_balance = agent_balance - REWARD #there is a delay in showing the transaction :(
+        ctx.logger.info(f"Balance after issuing reward: {agent_balance} TESTFET")
+    else:
+        ctx.logger.info(f"Payment transaction unsuccessful!")
+        exit(1)
 
 
 def stakystake():
     ledger: LedgerClient = get_ledger()
-    faucet: FaucetApi = get_faucet()
-    agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))
-    converted_balance = agent_balance/1000000000000000000
+    #faucet: FaucetApi = get_faucet()
     #faucet.get_wealth(farmer.wallet.address())
-    print(f"Received: {converted_balance} TESTFET")
+
+    agent_balance = ledger.query_bank_balance(Address(reward.wallet.address()))
+    converted_balance = agent_balance/ONETESTFET - UNCERTAINTYFET
+    #ctx.logger.info(f"Process stacking of: {converted_balance} TESTFET")
     #ctx.logger.info({agent_balance})
     
     #staking letsgooo
     ledger_client = LedgerClient(NetworkConfig.fetchai_stable_testnet())
-    faucet_api = FaucetApi(NetworkConfig.fetchai_stable_testnet())
+    #faucet_api = FaucetApi(NetworkConfig.fetchai_stable_testnet())
     validators = ledger_client.query_validators()
     # choose any validator
     validator = validators[2]
@@ -126,16 +172,16 @@ def stakystake():
     #ctx.logger.info({farmer_wallet})
     
     # delegate some tokens to this validator
+    agent_balance = agent_balance - REWARD #leave the reward amount of funds to further issue to main agent
     tx = ledger_client.delegate_tokens(validator.address, agent_balance, reward.wallet)
     tx.wait_to_complete()
-    #then call function to stake
-    #my_wallet = LocalWallet.from_unsafe_seed("registration test wallet")
-    ctx.logger.info("Delegation completed.")
-    summary = ledger_client.query_staking_summary(reward.wallet.address())
-    totalstaked = summary.total_staked/1000000000000000000
-    print(f"Staked: {totalstaked} TESTFET")
+    #ctx.logger.info("Delegation completed.")
+    #summary = ledger_client.query_staking_summary(reward.wallet.address())
+    #totalstaked = summary.total_staked/1000000000000000000
+    #ctx.logger.info(f"Staked: {totalstaked} TESTFET")
 
  
 if __name__ == "__main__":
+    load_dotenv()       # Load environment variables
     reward.run()
  

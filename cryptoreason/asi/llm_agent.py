@@ -22,9 +22,9 @@ headers = {
 
 agent = Agent(
     name="ASI1 Reasoning agent to sell/buy crypto",
-    port=8018,
+    port=8007,
     seed="LOLOLO lets buy some crypto letsgo",
-    endpoint=["http://127.0.0.1:8018/submit"],
+    endpoint=["http://127.0.0.1:8007/submit"],
     )
 
 class ASI1Request(Model):

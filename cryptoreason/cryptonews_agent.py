@@ -1,14 +1,20 @@
+#pip install newsapi-python
 import os
+from dotenv import load_dotenv
 import logging
 import sys
 import json
 import requests
-from datetime import datetime, timezone
 from typing import Optional
 from uagents import Agent, Context, Model
 import atexit
-#pip install newsapi-python
 from newsapi import NewsApiClient
+
+from datetime import datetime, timedelta
+
+
+# Ensure API key is loaded
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 # Configure Logging
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -23,8 +29,7 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
     logging.error("🔥 Uncaught Exception:", exc_info=(exc_type, exc_value, exc_traceback))
 sys.excepthook = handle_unexpected_exception
 
-# Ensure API key is loaded
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+
 
 class FearGreedData(Model):
     value: float
@@ -41,50 +46,55 @@ class CryptonewsResponse(Model):
 # Initialize Agent
 agent = Agent(
     name="Newsagent",
-    port=8016,
+    port=8005,
     seed="newsnewshehhee_agent1_secret_phrase",
-    mailbox = True,
-    endpoint=["http://127.0.0.1:8016/submit"],
+    endpoint=["http://127.0.0.1:8005/submit"],
     )
 
 
 @agent.on_event("startup")
 async def startup(ctx: Context):
     """Initialize agent with a test request"""
-    ctx.logger.info(f"✅ Agent started: {ctx.agent.address}")
-    #dummy_request = FGIRequest(limit=1)
-    #await process_response(ctx, dummy_request)
+    ctx.logger.info(f"Agent started: {ctx.agent.address}")
+    
+    #test it
+    #response = get_recent_crypto_news()
+    #ctx.logger.info(f"{response}")
 
 
 def get_recent_crypto_news(limit: int = 1) -> CryptonewsResponse:
     """Fetch crypto news data from NewsAPI"""
+    
+    today = datetime.today().strftime('%Y-%m-%d')# Get today's date
+    yesterday = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')# Get yesterday's date by subtracting 1 day
+   
     crypto_news=""
+    news_output=""
+    extracted_data = []
     try:
-        newsapi = NewsApiClient(api_key="94b2d38f6b104eafa2f041bc323ed03c")
-        crypto_news = newsapi.get_everything(q="crypto OR cryptocurrency OR bitcoin OR ethereum OR financial market OR crypto exchange OR bullish OR bearish OR recession OR FOMC", language="en")
+        newsapi = NewsApiClient(api_key=NEWS_API_KEY)#"NEWS_API_KEY"
+        
+        #already a dictionary
+        crypto_news = newsapi.get_everything(q="crypto OR cryptocurrency OR bitcoin OR ethereum OR recession OR FOMC OR crypto exchange OR bearish OR bullish",from_param=str(yesterday),to=str(today), sort_by = "relevancy", page_size=10, page=1, language="en")#recession, FOMC, crypto exchange, bearish, bullish, financial market
+        
+        logging.info(f"Found info: {crypto_news}")
+        #we need to optimise the size, otherwise it may exceed ASI1 28000 tokens limit
+        #news are delayed by 1 day with free version
+
+        articles = crypto_news['articles']
+        
+        for article in articles:
+            title = article.get('title')
+            description = article.get('description')
+            content = article.get('content')
+            extracted_data.append({'title': title, 'description': description})#'content':content
+        
+        
     except Exception as e:
         logging.error(f"❌ Couldnt connect to NEWS_API: {e}")
-        #response = requests.get(url, headers=headers, params=params)
-        #response.raise_for_status()  # Raises error for non-200 status codes
-        logging.info(f"Found info: {crypto_news}")
-        #raw_data = response.json()
-        #fear_greed_data = []
 
-        #for entry in raw_data.get("data", []):
-        #    data = FearGreedData(
-        #        value=entry["value"],
-        #        value_classification=entry["value_classification"],
-         #       timestamp=entry["timestamp"]
-         #   )
-        #    fear_greed_data.append(data)
-
-        #return FGIResponse(
-        #    data=fear_greed_data,
-        #    status="success",
-        #    timestamp=datetime.utcnow(timezone.utc).isoformat()
-        #)
         
-    return json.dumps(crypto_news)
+    return json.dumps(extracted_data) #news_output
             #status="success",
             #timestamp=datetime.now(timezone.utc).isoformat()
         
@@ -100,9 +110,6 @@ async def handle_message(ctx: Context, sender: str, msg: CryptonewsRequest):
 
 
 if __name__ == "__main__":
-    try:
-        logging.info("🚀 Starting the FGI agent...")
-        agent.run()
-    except Exception as e:
-        logging.error(f"❌ Fatal Error: {e}")
+    load_dotenv()       # Load environment variables
+    agent.run()
 
