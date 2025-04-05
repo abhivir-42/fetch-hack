@@ -465,6 +465,11 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
         else:
             logging.info("⏳ HOLD decision received.")
             print("HOLD")
+            try:
+                await ctx.send(REWARD_AGENT, RewardRequest(status="reward"))
+            except Exception as e:
+                logging.error(f"Failed to send request for reward: {e}")
+            
             #exit(1)
     
 
