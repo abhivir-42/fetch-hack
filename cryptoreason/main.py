@@ -195,7 +195,6 @@ async def message_handler(ctx: Context, sender: str, msg: Heartbeat):
         #user input required
         topupwallet = "yes"#input("Would you like to top up your agent wallet?[yes/no]: ").lower()
         if (topupwallet == "yes"):
-            
             #user input required
             topupamount = 10#input("How many FET to transfer over?: ").lower()#convert from string to float
             
@@ -242,7 +241,7 @@ async def message_handler(ctx: Context, sender: str, msg: PaymentRequest):
     ctx.logger.info(f"Received message from {sender}: {msg}")
     
     #send the payment
-    fees = msg.amount /ONETESTFET #input does not compile variables
+    fees = msg.amount/ONETESTFET #input does not compile variables
     #logging.info(f"You are required to pay {fees} FET for this service. ")
     
     #need to add userinput
