@@ -1,7 +1,5 @@
 #heartbeat agent
 from flask import Flask, request, jsonify
-from threading import Thread
-
 from flask_cors import CORS
 #from uagents_core.crypto import Identity
 from uagents_core.identity import Identity
@@ -20,8 +18,9 @@ from datetime import datetime, timedelta, timezone  # Correct import
 
 from swapland.llm_swapfinder import query_llm
 
-flask_app = Flask(__name__)
-CORS(flask_app)
+
+app = Flask(__name__)
+CORS(app)
 
 json_file_path = "hb_data.json"
 
@@ -54,7 +53,7 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmm"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmmNewSeedNeeded"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
@@ -98,7 +97,7 @@ def init_client():
 
 
 #send to uAgent
-@flask_app.route('/request', methods=['POST'])
+@app.route('/request', methods=['POST'])
 def send_data():
     """Send payload to the selected agent based on provided address."""
     global agent_response
@@ -166,7 +165,7 @@ def send_data():
 
 
 # app route to recieve the messages from other agents
-@flask_app.route('/api/webhook', methods=['POST'])
+@app.route('/api/webhook', methods=['POST'])
 def webhook():
     """Handle incoming messages"""
     global agent_response
@@ -197,4 +196,5 @@ def webhook():
 if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
-    Thread(target=lambda: flask_app.run(host="0.0.0.0", port=5011, debug=True, use_reloader=False)).start()
+    app.run(host="0.0.0.0", port=5011)
+
