@@ -1,0 +1,12 @@
+INFO:__main__:Client agent started with address: agent1q2spctqqj58lnmqprq5r48sqs3r5cw9gat444x75a5p7dm3lcw6lgczt2jm
+2025-04-09 20:19:52,374 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 20:19:53,303 uagents_core.utils.registration INFO Successfully registered as custom agent in Agentverse
+2025-04-09 20:19:53,451 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+INFO:__main__:Quickstart agent registration complete!
+ * Serving Flask app 'base_usdcTOeth'
+ * Debug mode: on
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5013
+ * Running on http://10.79.1.196:5013
+INFO:werkzeug:[33mPress CTRL+C to quit[0m

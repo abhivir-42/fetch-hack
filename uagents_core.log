@@ -1,0 +1,20 @@
+2025-04-09 22:12:03,564 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:12:03,897 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:14:53,901 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:14:54,184 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:19:25,109 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:19:25,420 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:20:14,660 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:20:15,071 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:20:17,342 uagents_core.utils.resolver INFO Got response looking up agent endpoint
+2025-04-09 22:20:20,180 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:20:20,452 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:21:57,258 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:21:57,558 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:22:39,892 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:22:40,515 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:23:51,009 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:23:51,294 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:42:59,173 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 22:42:59,482 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 22:43:02,305 uagents_core.utils.resolver INFO Got response looking up agent endpoint
