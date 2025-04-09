@@ -79,7 +79,7 @@ def init_client():
         # Register the agent with Agentverse
         register_with_agentverse(
             identity=client_identity,
-            url="http://localhost:5011/api/webhook",
+            url="http://localhost:8300/api/webhook",
             agentverse_token=os.getenv("AGENTVERSE_API_KEY"),
             agent_title="Heartbeat agent",
             readme=readme
@@ -196,5 +196,5 @@ def webhook():
 if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
-    app.run(host="0.0.0.0", port=5011)
+    app.run(host="0.0.0.0", port=8300)
 
