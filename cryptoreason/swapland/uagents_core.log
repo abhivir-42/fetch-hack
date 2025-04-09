@@ -1,0 +1,77 @@
+2025-04-09 20:09:33,157 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 20:09:33,531 uagents_core.utils.registration INFO Successfully registered as custom agent in Agentverse
+2025-04-09 20:09:33,879 uagents_core.utils.registration INFO Completed registering agent with Agentverse
+2025-04-09 20:09:43,760 uagents_core.utils.registration INFO Registering with Almanac API
+2025-04-09 20:09:53,801 uagents_core.utils.registration ERROR Error submitting request: None
+Traceback (most recent call last):
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/connection.py", line 516, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/.pyenv/versions/3.12.7/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/Users/abhivir42/.pyenv/versions/3.12.7/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/.pyenv/versions/3.12.7/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/.pyenv/versions/3.12.7/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/.pyenv/versions/3.12.7/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/ssl.py", line 1251, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/.pyenv/versions/3.12.7/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/ssl.py", line 1103, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/util/retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/util/util.py", line 39, in reraise
+    raise value
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='agentverse.ai', port=443): Read timed out. (read timeout=10)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/uagents_core/utils/registration.py", line 45, in _send_post_request
+    response: requests.Response = requests.post(
+                                  ^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abhivir42/projects/AI-Crypto-Hedge-Fund-Manager/.venv/lib/python3.12/site-packages/requests/adapters.py", line 713, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='agentverse.ai', port=443): Read timed out. (read timeout=10)
+2025-04-09 20:09:54,071 uagents_core.utils.registration INFO Successfully registered as custom agent in Agentverse
+2025-04-09 20:09:54,191 uagents_core.utils.registration INFO Completed registering agent with Agentverse
