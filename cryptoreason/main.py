@@ -159,9 +159,9 @@ FGIOUTPUT = " "
 #logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
 agent = Agent(
     name="SentimentBased CryptoSellAlerts",
-    port=8017,
+    port=8650,
     seed="this_is_main_agent_to_run",
-    endpoint=["http://127.0.0.1:8017/submit"],
+    endpoint=["http://127.0.0.1:8650/submit"],
     )
 
 
