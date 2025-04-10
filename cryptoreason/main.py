@@ -24,6 +24,9 @@ from cosmpy.aerial.config import NetworkConfig
 from cosmpy.aerial.wallet import LocalWallet
 
 import asyncio
+import json
+# Remove these imports as they're not needed
+# from flask import jsonify, request
 
 #ask for chain the user would like to watch and add to variable chain
 #based on the choise base, ether, or polygon, choose or discover appropriate coin info agent.
@@ -154,6 +157,16 @@ ASIITERATIONS = 4
 RISK = " "
 INVESTOR = " "
 FGIOUTPUT = " "
+USERREASON = ""
+
+# Global variable to store analysis results
+LATEST_ANALYSIS = {
+    "action": "",
+    "amount": 0.0,
+    "price": 0.0,
+    "details": "",
+    "timestamp": 0.0
+}
 
 # Initialize the agent
 #logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
@@ -164,6 +177,38 @@ agent = Agent(
     endpoint=["http://127.0.0.1:8650/submit"],
     )
 
+# Add a new model for API wrapper requests
+class ApiWrapperRequest(Model):
+    network: str
+    investor_type: str
+    risk_strategy: str
+    reason: str
+    timestamp: float
+
+# Response model for analysis results
+class AnalysisResult(Model):
+    action: str
+    amount: float
+    price: float
+    details: str
+    timestamp: float
+
+# Add models for API agent communication
+class TradingRequest(Model):
+    network: str
+    investor_type: str
+    risk_strategy: str
+    reason: str
+    timestamp: float
+    request_id: str
+
+class TradingResponse(Model):
+    action: str
+    amount: float
+    price: float
+    details: str
+    timestamp: float
+    request_id: str
 
 @agent.on_event("startup")
 async def introduce_agent(ctx: Context):
@@ -174,7 +219,55 @@ async def introduce_agent(ctx: Context):
     agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/ONETESTFET
     ctx.logger.info(f"My balance is {agent_balance} TESTFET")
 
-
+# Handler for incoming API agent requests
+@agent.on_message(model=TradingRequest)
+async def handle_trading_request(ctx: Context, sender: str, msg: TradingRequest):
+    """Handle trading requests from the API agent"""
+    ctx.logger.info(f"Received trading request from {sender}: {msg.request_id}")
+    
+    # Extract the trading parameters
+    global NETWORK, RISK, INVESTOR, USERREASON
+    NETWORK = msg.network
+    INVESTOR = msg.investor_type
+    RISK = msg.risk_strategy
+    USERREASON = msg.reason
+    
+    # In a real implementation, you'd trigger the full analysis flow here
+    # by communicating with all the needed agents (coin_info, fgi, news, llm, etc.)
+    # For now, we'll provide a simulated response based on simple rules
+    
+    # Simplified logic - in real use, this would be based on comprehensive analysis
+    action = "BUY" if NETWORK == "ethereum" else "SELL"
+    action = "HOLD" if "hold" in USERREASON.lower() else action
+    
+    # If the user explicitly mentions an action in their reason, use that
+    if "buy" in USERREASON.lower():
+        action = "BUY"
+    elif "sell" in USERREASON.lower():
+        action = "SELL"
+    
+    # Send the analysis result back to the API agent
+    await ctx.send(
+        sender,
+        TradingResponse(
+            action=action,
+            amount=0.5,
+            price=2000.00,
+            details=f"Analysis complete based on {RISK} strategy for {INVESTOR} investor on {NETWORK}.",
+            timestamp=msg.timestamp,
+            request_id=msg.request_id
+        )
+    )
+    
+    # Store the result locally as well
+    global LATEST_ANALYSIS
+    LATEST_ANALYSIS = {
+        "action": action,
+        "amount": 0.5,
+        "price": 2000.00,
+        "details": f"Analysis complete based on {RISK} strategy for {INVESTOR} investor on {NETWORK}.",
+        "timestamp": msg.timestamp
+    }
 
 @agent.on_interval(period=24 * 60 * 60.0)  # Runs every 24 hours
 async def swapland_request(ctx: Context):

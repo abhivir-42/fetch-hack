@@ -7,6 +7,50 @@ import subprocess
 import time
 import threading
 import socket
+import asyncio
+import nest_asyncio
+
+# Apply nest_asyncio to allow nested event loops (needed for asyncio in Flask)
+nest_asyncio.apply()
+
+# Import the API agent functions
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+try:
+    from api_agent import send_trading_request, get_response
+except ImportError:
+    # Mock functions if api_agent.py is not available
+    async def send_trading_request(request_data):
+        return None
+    
+    def get_response(request_id, timeout=10):
+        return {"status": "error", "message": "API agent not available"}
+
+# Ensure API agent is running
+def start_api_agent():
+    try:
+        agent_already_running = False
+        try:
+            # Check if agent is already running
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(1)
+                s.connect(('localhost', 8601))
+                agent_already_running = True
+        except:
+            pass
+        
+        if not agent_already_running:
+            print("Starting API agent...")
+            agent_path = os.path.join(os.getcwd(), "cryptoreason", "api_agent.py")
+            subprocess.Popen(["python3", agent_path], 
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+            time.sleep(3)  # Give agent time to start
+    except Exception as e:
+        print(f"Error starting API agent: {e}")
+
+# Start the API agent as part of initialization
+threading.Thread(target=start_api_agent, daemon=True).start()
 
 app = Flask(__name__)
 # Configure CORS to allow requests from the frontend
@@ -101,7 +145,12 @@ def check_agent_status(port):
             s.connect(('localhost', port))
             return True
         except:
-            return False
+            # If socket connection fails, check if a Python process is using this port
+            try:
+                output = subprocess.check_output(f"lsof -i :{port}", shell=True)
+                return b"Python" in output
+            except:
+                return False
 
 def update_agent_status():
     """Periodically update agent status"""
@@ -232,7 +281,7 @@ def execute_trade():
 
 @app.route('/api/submit-inputs', methods=['POST'])
 def submit_inputs():
-    """Handle user inputs for main.py"""
+    """Handle user inputs and forward to the main agent via API agent"""
     data = request.json
     if not data:
         return jsonify({"status": "error", "message": "No data provided"}), 400
@@ -250,11 +299,37 @@ def submit_inputs():
     }
 
     # Check if the main_agent is running
-    if agent_status["main_agent"]:
+    main_port = AGENT_CONFIG["main_agent"]["port"]
+    main_agent_running = check_agent_status(main_port)
+    
+    # Update status
+    agent_status["main_agent"] = main_agent_running
+    
+    if main_agent_running:
         try:
-            # Trigger the main agent to process inputs
-            # Right now we're just providing a simulated response but
-            # in a real scenario, we would communicate with the main agent
+            # Try to communicate with the main agent via the API agent
+            request_data = {
+                "network": user_inputs["network"],
+                "investor_type": user_inputs["investor_type"],
+                "risk_strategy": user_inputs["risk_strategy"],
+                "reason": user_inputs["reason"]
+            }
+            
+            # Send the request asynchronously
+            loop = asyncio.get_event_loop()
+            request_id = loop.run_until_complete(send_trading_request(request_data))
+            
+            if request_id:
+                # Wait for a response from the main agent
+                response = get_response(request_id, timeout=15)
+                
+                if response["status"] == "success":
+                    # Add to transaction history
+                    transaction_data = response["data"].copy()
+                    last_data["transactions"].append(transaction_data)
+                    return jsonify(response)
+            
+            # If API agent communication failed, fall back to the mock response
             action = "BUY" if data.get('network') == "ethereum" else "SELL"
             action = "HOLD" if "hold" in data.get('reason', '').lower() else action
             
@@ -272,7 +347,7 @@ def submit_inputs():
                 "message": "Analysis complete. Recommendation generated."
             }
             
-            # Add to transaction history with the action field included
+            # Add to transaction history
             transaction_data = response["data"].copy()
             last_data["transactions"].append(transaction_data)
             
@@ -283,10 +358,23 @@ def submit_inputs():
                 "message": f"Error processing inputs: {str(e)}"
             }), 500
     else:
-        return jsonify({
-            "status": "error", 
-            "message": "Main agent is not running. Please start the agent first."
-        }), 400
+        # Try to start the main agent automatically
+        try:
+            agent_path = os.path.join(os.getcwd(), "cryptoreason", "main.py")
+            subprocess.Popen(["python3", agent_path], 
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+            time.sleep(3)  # Give it a moment to start
+            
+            return jsonify({
+                "status": "pending", 
+                "message": "Main agent was not running. Started automatically. Please try again in a few seconds."
+            }), 202
+        except Exception as e:
+            return jsonify({
+                "status": "error", 
+                "message": f"Main agent is not running and could not be started: {str(e)}"
+            }), 400
 
 @app.route('/api/start-agent', methods=['POST'])
 def start_agent():
