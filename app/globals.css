@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 245, 247, 250;
+  --background-start-rgb: 248, 250, 252;
   --background-end-rgb: 255, 255, 255;
 }
 
@@ -16,26 +16,70 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+  
+  h1 {
+    @apply text-4xl mb-4;
+  }
+  
+  h2 {
+    @apply text-3xl mb-3;
+  }
+  
+  h3 {
+    @apply text-2xl mb-2;
+  }
 }
 
 @layer components {
   .btn {
-    @apply px-4 py-2 rounded-md font-medium transition-colors;
+    @apply px-4 py-2 rounded-md font-medium transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-opacity-50;
   }
   
   .btn-primary {
-    @apply bg-primary text-white hover:bg-opacity-90;
+    @apply bg-primary text-white hover:bg-primary/90 focus:ring-primary/50 shadow-sm;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-opacity-90;
+    @apply bg-secondary text-white hover:bg-secondary/90 focus:ring-secondary/50 shadow-sm;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 bg-white text-gray-800 hover:bg-gray-50 focus:ring-gray-300/50;
   }
   
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200;
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-md p-6;
+    @apply bg-white rounded-lg shadow-card p-6 transition-all duration-200 hover:shadow-card-hover;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
   }
 } 
