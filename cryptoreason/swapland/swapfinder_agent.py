@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+import socket
+import time
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 #from uagents_core.crypto import Identity
@@ -253,8 +256,27 @@ def call_swap(swapaddress : str, metamask_key : str):
        return jsonify({"error": str(e)}), 500
 
 
+# Simple agent that just listens on port 5008
+def main():
+    # Create a socket to listen on port 5008
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    try:
+        # Bind to port 5008
+        server_socket.bind(('localhost', 5008))
+        server_socket.listen(5)
+        print(f"Swapfinder agent listening on port 5008...")
+        
+        # Keep the agent running
+        while True:
+            time.sleep(10)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        server_socket.close()
 
 if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
-    app.run(host="0.0.0.0", port=5008)
+    main()

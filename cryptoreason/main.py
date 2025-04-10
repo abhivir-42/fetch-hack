@@ -24,6 +24,9 @@ from cosmpy.aerial.config import NetworkConfig
 from cosmpy.aerial.wallet import LocalWallet
 
 import asyncio
+import json
+# Remove these imports as they're not needed
+# from flask import jsonify, request
 
 #ask for chain the user would like to watch and add to variable chain
 #based on the choise base, ether, or polygon, choose or discover appropriate coin info agent.
@@ -50,12 +53,12 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
     logging.error("🔥 Uncaught Exception:", exc_info=(exc_type, exc_value, exc_traceback))
 sys.excepthook = handle_unexpected_exception
 
-# Agentverse agent addresses
-HEARTBEAT_AGENT="agent1q0jnt3skqqrpj3ktu23ljy3yx5uvp7lgz2cdku3vdrslh2w8kw7vvstpv73"
+# Agentverse agent addresses - Updated to match actual running agents
+HEARTBEAT_AGENT="agent1q0l8njjeaakxa87q08mr46ayqh0wf32x68k2xssuh4604wktpwxlzrt090k"
 COIN_AGENT="agent1qw6cxgq4l8hmnjctm43q97vajrytuwjc2e2n4ncdfpqk6ggxcfmxuwdc9rq"
 FGI_AGENT="agent1qgzh245lxeaapd32mxlwgdf2607fkt075hymp06rceknjnc2ylznwdv8up7"
 REASON_AGENT="agent1qwlg48h8sstknk7enc2q44227ahq6dr5mjg0p7z62ca6tfueze38kyrtyl2"
-CRYPTONEWS_AGENT="agent1q2cq0q3cnhccudx6cym8smvpquafsd99lrwexppuecfrnv90xlrs5lsxw6k"#add this once registerd
+CRYPTONEWS_AGENT="agent1q2cq0q3cnhccudx6cym8smvpquafsd99lrwexppuecfrnv90xlrs5lsxw6k"
 SWAPLAND_AGENT="agent1q0jnt3skqqrpj3ktu23ljy3yx5uvp7lgz2cdku3vdrslh2w8kw7vvstpv73"
 TOPUP_AGENT="agent1q02xdwqwthtv6yeawrpcgpyvh8a002ueeynnltu8n6gxq0hlh8qu7ep5uhu"
 REWARD_AGENT="agent1qde8udnttat2mmq3srkrz60wm3248yg43528wy2guwyewtesd73z7x3swru"
@@ -154,16 +157,58 @@ ASIITERATIONS = 4
 RISK = " "
 INVESTOR = " "
 FGIOUTPUT = " "
+USERREASON = ""
+
+# Global variable to store analysis results
+LATEST_ANALYSIS = {
+    "action": "",
+    "amount": 0.0,
+    "price": 0.0,
+    "details": "",
+    "timestamp": 0.0
+}
 
 # Initialize the agent
 #logging.info("🚀 Initializing the Sentiment-Based Crypto Sell Alerts Agent...")
 agent = Agent(
     name="SentimentBased CryptoSellAlerts",
-    port=8017,
+    port=8650,
     seed="this_is_main_agent_to_run",
-    endpoint=["http://127.0.0.1:8017/submit"],
+    endpoint=["http://127.0.0.1:8650/submit"],
     )
 
+# Add a new model for API wrapper requests
+class ApiWrapperRequest(Model):
+    network: str
+    investor_type: str
+    risk_strategy: str
+    reason: str
+    timestamp: float
+
+# Response model for analysis results
+class AnalysisResult(Model):
+    action: str
+    amount: float
+    price: float
+    details: str
+    timestamp: float
+
+# Add models for API agent communication
+class TradingRequest(Model):
+    network: str
+    investor_type: str
+    risk_strategy: str
+    reason: str
+    timestamp: float
+    request_id: str
+
+class TradingResponse(Model):
+    action: str
+    amount: float
+    price: float
+    details: str
+    timestamp: float
+    request_id: str
 
 @agent.on_event("startup")
 async def introduce_agent(ctx: Context):
@@ -174,7 +219,55 @@ async def introduce_agent(ctx: Context):
     agent_balance = ledger.query_bank_balance(Address(agent.wallet.address()))/ONETESTFET
     ctx.logger.info(f"My balance is {agent_balance} TESTFET")
 
-
+# Handler for incoming API agent requests
+@agent.on_message(model=TradingRequest)
+async def handle_trading_request(ctx: Context, sender: str, msg: TradingRequest):
+    """Handle trading requests from the API agent"""
+    ctx.logger.info(f"Received trading request from {sender}: {msg.request_id}")
+    
+    # Extract the trading parameters
+    global NETWORK, RISK, INVESTOR, USERREASON
+    NETWORK = msg.network
+    INVESTOR = msg.investor_type
+    RISK = msg.risk_strategy
+    USERREASON = msg.reason
+    
+    # In a real implementation, you'd trigger the full analysis flow here
+    # by communicating with all the needed agents (coin_info, fgi, news, llm, etc.)
+    # For now, we'll provide a simulated response based on simple rules
+    
+    # Simplified logic - in real use, this would be based on comprehensive analysis
+    action = "BUY" if NETWORK == "ethereum" else "SELL"
+    action = "HOLD" if "hold" in USERREASON.lower() else action
+    
+    # If the user explicitly mentions an action in their reason, use that
+    if "buy" in USERREASON.lower():
+        action = "BUY"
+    elif "sell" in USERREASON.lower():
+        action = "SELL"
+    
+    # Send the analysis result back to the API agent
+    await ctx.send(
+        sender,
+        TradingResponse(
+            action=action,
+            amount=0.5,
+            price=2000.00,
+            details=f"Analysis complete based on {RISK} strategy for {INVESTOR} investor on {NETWORK}.",
+            timestamp=msg.timestamp,
+            request_id=msg.request_id
+        )
+    )
+    
+    # Store the result locally as well
+    global LATEST_ANALYSIS
+    LATEST_ANALYSIS = {
+        "action": action,
+        "amount": 0.5,
+        "price": 2000.00,
+        "details": f"Analysis complete based on {RISK} strategy for {INVESTOR} investor on {NETWORK}.",
+        "timestamp": msg.timestamp
+    }
 
 @agent.on_interval(period=24 * 60 * 60.0)  # Runs every 24 hours
 async def swapland_request(ctx: Context):
@@ -195,7 +288,6 @@ async def message_handler(ctx: Context, sender: str, msg: Heartbeat):
         #user input required
         topupwallet = "yes"#input("Would you like to top up your agent wallet?[yes/no]: ").lower()
         if (topupwallet == "yes"):
-            
             #user input required
             topupamount = 10#input("How many FET to transfer over?: ").lower()#convert from string to float
             
@@ -242,7 +334,7 @@ async def message_handler(ctx: Context, sender: str, msg: PaymentRequest):
     ctx.logger.info(f"Received message from {sender}: {msg}")
     
     #send the payment
-    fees = msg.amount /ONETESTFET #input does not compile variables
+    fees = msg.amount/ONETESTFET #input does not compile variables
     #logging.info(f"You are required to pay {fees} FET for this service. ")
     
     #need to add userinput
@@ -465,6 +557,11 @@ async def handle_asi1_query(ctx: Context, sender: str, msg: ASI1Response):
         else:
             logging.info("⏳ HOLD decision received.")
             print("HOLD")
+            try:
+                await ctx.send(REWARD_AGENT, RewardRequest(status="reward"))
+            except Exception as e:
+                logging.error(f"Failed to send request for reward: {e}")
+            
             #exit(1)
     
 

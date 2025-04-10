@@ -1,0 +1,154 @@
+main:
+BASE       python main.py
+INFO:  [SentimentBasedCryptoSellAlerts]: Starting agent with address: agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea
+INFO: root: ✅ Agent started: agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea
+INFO: root: [SentimentBasedCryptoSellAlerts]: Hello! I'm SentimentBasedCryptoSellAlerts and my address is agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea, my wallet fet ch1p78q2zeeycnwcksc4s7ap7232uautlwq2pf
+INFO: [SentimentBasedCryptoSellAlerts]: My balance is 1374.445090455 TESTFET
+INFO: [SentimentBasedCryptoSellAlerts]: Agent inspector available at https://agentverse.ai/inspect/?uri=httpp3A//127.0.0.1:938A8017&address=agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea
+INFO: [SentimentBasedCryptoSellAlerts]: Starting server on http://0.0.0.0:8017 (Press CTRL+C to quit)
+INFO: [uagents.registration]: Registration on Almanac API successful
+INFO: [uagents.registration]: Almanac contract registration is up to date!
+INFO: root: 📈 User's wallet topped up. Success! Received responsecontinue. LETS trade
+INFO: [SentimentBasedCryptoSellAlerts]: Balance after topup wallet: 1384.445090455 TESTFET
+INFO: [SentimentBasedCryptoSellAlerts]: Received top-up status sent
+INFO: [SentimentBasedCryptoSellAlerts]: Received message from agent1qde8udnttat2mmq3srkrz60w n3r0qnmnjuq8k5t0mxgwdxfap9453228wy2guywewtesd737x3wsru: wallet: address=atestfet amount=6000000000000000000 denom='atestfet'
+INFO: [SentimentBasedCryptoSellAlerts]: Fees transaction successful!
+INFO: [SentimentBasedCryptoSellAlerts]: Balance after fees: 1378.445094885 TESTFET
+INFO: root: 📈 Received CoinResponse: name='Ethereum' symbol='ETH' current_price=1510.25 market_cap =18264819537.0 total_volume=21218775926.0 price_change_24h=-2.2367
+INFO: root: 📈 Received CryptoNewsResponse!
+INFO: root: 📈 Sending request to FGI sent!
+INFO: root: 📈 Received FGI response: data=[FearGreedData(value=17.0, value_classification='Extreme Fear', timestamp='1743984000')] status='success' timestamp='2025-04-08T16:39:53.288995+00:00'
+Please confirm your risk strategy for long-term or short-term investor?
+INFO: root: ✅ ASI1 Agent 4 finished reasoning
+INFO: root: ✅ ASI1 Agent 3 finished reasoning
+INFO: root: ✅ ASI1 Agent 2 finished reasoning
+CRITICAL: root: ✅ SELL SIGNAL DETECTED!
+INFO: [SentimentBasedCryptoSellAlerts]: Received message from agent1q0jnt3skqarpj3ktu231j3yy x5uvp71g2zcdku3vds1n2u8kw7v5tpv73: Successfully sent request to Swapland Agent!
+INFO: [SentimentBasedCryptoSellAlerts]: Successfully executed Swapland Agent to convert ETH to USDC!
+INFO: [SentimentBasedCryptoSellAlerts]: Receive transaction info from agent1qde8udnttat2mmq3srkrz60w n3r0qnmnjuq8k5t0mxgwdxfap9453228wy2guywewtesd737x3wsru: tx_hash='FDE4A9C4D0312752235F2A85B80C738BF2245D184. 3b2rkea3b294y943528wy2guywewtesd737x3wsru'
+INFO: [SentimentBasedCryptoSellAlerts]: Reward transaction was successful: {'receiver': 'fet ch1p78q2zeeycnwcksc4s7ap7232uautlwq2pf', 'amount': '2000000000000000000 atestfet'}
+INFO: [SentimentBasedCryptoSellAlerts]: Balance after reward: 1380.445094885 TESTFET
+
+
+heartbeat_agent:
+BASE       python heartbeat_agent.py
+INFO: __main__: Client agent started with address: agent1q018njeaaakxa870q8
+mr46ayqhowf32x68k2xssuh4604wktpwx1zrt099k
+2025-04-08 17:37:02, 488 uagents.core.utils.registering_with_almanac_api INFO Registering with Almanac API
+2025-04-08 17:37:02, 488 uagents.core.utils.registering_successfully_registered_as_custom_agent_in_agentverse INFO Successfully registered as custom agent in Agentverse
+2025-04-08 17:37:02, 625 uagents.core.utils.registering_completed_registration_with_agentverse INFO Completed registration with Agentverse
+INFO: __main__: Quickstart agent registration complete!
+* Serving Flask app 'heartbeat_agent'
+* Debug mode: off
+INFO: werkzeug: WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+* Running on all addresses (0.0.0.0)
+* Running on http://127.0.0.1:5911
+* Running on http://192.168.1.169:5911
+INFO: werkzeug: Press CTRL+C to quit
+INFO: __main__: Received response
+INFO: __main__: Processed response: ready
+INFO: __main__: Data from the past 2 hours: {'2025-04-08T16:30:15': {'bpm': 72, 'confidence': 3}, '2025-04-08T16:30:00': {'bpm': 74, 'confidence': 3}, '2025-04-08T16:30:05': {'bpm': 70, 'confidence': 2}, '2025-04-08T16:30:00': {'bpm': 75, 'confidence': 0}}
+INFO: __main__: Request sent to ASI1 model...
+2025-04-08 17:39:36, 728 uagents.core.utils.resolver INFO Got response looking up agent endpoint
+INFO: werkzeug: 127.0.0.0 - - [08/Apr/2025 17:39:36] "POST /api/webhook HTTP/1.1" 200 -
+
+
+coinfo_agent.py:
+BASE       python coinfo_agent.py
+INFO: [CoinInfoAgent]: Starting agent with address: agent1qw6cxgq418hmnjctm4397vajrytuwjc2e2h4ncdfpfakqgggxfcmxuwdc9rq
+INFO: [CoinInfoAgent]: ✅ Agent started: agent1qw6cxgq418hmnjctm4397vajrytuwjc2e2h4ncdfpfakqgggxfcmxuwdc9rq
+INFO: [CoinInfoAgent]: Agent inspector available at https://agentverse.ai/inspect/?uri=httpp3A//127.0.0.1:938A8004&address=agent1qw6cxgq418hmnjctm4397vajrytuwjc2e2h4ncdfpfakqgggxfcmxuwdc9rq
+INFO: [CoinInfoAgent]: Starting server on http://0.0.0.0:8004 (Press CTRL+C to quit)
+INFO: [uagents.registration]: Registration on Almanac API successful
+INFO: [uagents.registration]: Almanac contract registration is up to date!
+
+
+fgi_agent:
+INFO: [FGIAgent]: 📧 Received message from agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea: FGIRequest for 1 entries
+INFO: [FGIAgent]: 📧 Received message from agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea: FGIRequest for 1 entries
+INFO: [FGIAgent]: 📈 Fear and Greed Index: 17.0
+INFO: [FGIAgent]: 📊 Classification: Extreme fear
+INFO: [FGIAgent]: 📅 Timestamp: 1743984000
+
+
+cryptonews_agent:
+INFO: root: 📧 Received message from agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea: CryptoNewsRequest for 1 entries
+INFO: root: Received crypto info: {'status': 'ok', 'totalResults': 2514, 'articles': [{'source': {'id': None, 'name': 'Forbes'}, 'author': 'Ty Roush, Forbes Staff, Ty Roush, Forbes Staff', 'title': 'Bitcoin Falls Below $77,000 As Trump’s Tariffs Erase Election Boost', 'description': 'Several cryptocurrencies have lost nearly all their gains since Trump’s election win in November.', 'url': 'https://www.forbes.com/sites/tylerroush/2025/04/07/bitcoin-falls-below-77000-as-trumps-tariffs-erase-election-boost/', 'urlToImage': 'https://imageio.forbes.com/specials-images/imageserve/67d3822876162cb2c2d8/0x0.jpg?format=jpg&crop=3393,1908,x0,y318,safe&height=900&width=1600&fit=bounds', 'publishedAt': '2025-04-07T13:05:32Z', 'content': 'President Donald Trump’s far-reaching reciprocal tariffs appear to be impacting cryptocurrency prices, as the price of bitcoin fell below $77,000 for the first time since Trump’s election win in November. [+3846 chars]'}, {'source': {'id': 'business-insider', 'name': 'Business Insider'}, 'author': 'fdemott@businessinsider.com (Filip De Mott)', 'title': 'This is the next key level for investors to watch in the stock market’s historic rout', 'description': 'The stock market tumble could have more room to run as tariffs continue to wreak havoc. Morgan Stanley’s Mike Wilson said', 'url': 'https://www.businessinsider.com/stock-crash-sp500-outlook-bear-market-trump-tariffs-trade-2025-4', 'urlToImage': 'https://i.insider.com/67f3d463add28b14d767c2b?width=1200&format=jpeg', 'publishedAt': '2025-04-07T16:39:06Z', 'content': 'With US indexes reeling f'}]}
+
+
+reward_agent:
+INFO: [Reward agent]: Received payment request from agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea: ready='ready'
+INFO: [Reward agent]: Received transaction info from agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea: tx_hash='B55D3B2F254BE1F1648DF765A7248E1CB22BF3AF271D3C5A15077BBA4443A6A'
+INFO: [Reward agent]: Transaction was successful: {'receiver': 'fetch1wmxfayc97j4asm75vxcmxzkzh757d89f3an7', 'amount': '6000000000000000000 atestfet'}
+INFO: [Reward agent]: Balance after receiving fees: 8.005954457651768 TESTFET
+INFO: [Reward agent]: Received fees have been successfully staked.
+INFO: [Reward agent]: Staked: 397.19435742804785 TESTFET
+INFO: [Reward agent]: Available balance after staking: 2.00805216275793487 TESTFET
+INFO: [Reward agent]: Reward has been issued!
+INFO: [Reward agent]: Payment transaction successful!
+INFO: [Reward agent]: Balance after issuing reward: -2E+18 TESTFET
+
+
+topup_agent:
+(debug message little bit confusing, but it shows the main.py agent balance. so we can see that before top up it was 1362, then topup agent sent 10 FET, and main.py got now 1372.)
+INFO: [Farmer agent faucet collector]: {1358.4473392349998}
+INFO: root: 📧 After funds received: 1368.4473392349998
+INFO: root: [Farmer agent faucet collector]: {1362.446879415}
+INFO: root: 📧 After funds received: 1372.446879415
+
+
+llm_agent:
+INFO: [ASI1 Reasoning agent to sell/buy crypto]: 📧 Received message from agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea: Analysing crypto sentiment...
+INFO: root: Output from json: {'model': 'asi1-mini', 'id': 'id_jHLR8Pi6vTEyldC', 'executable_data': [], 'conversation_id': None, 'thought': 'To make a decision regarding the native token of the given blockchain network (base), which is Ethereum (ETH), we need to analyze the provided data. \n\n**Fear Greed Index Analysis:** The current Fear Greed Index is at 17.0, classified as "Extreme fear". This suggests that the market is currently driven by fear, which could indicate a potential buying opportunity if the market is oversold. However, it can also mean that the market is heading towards further decline.\n\n**Coin Market Data for Ethereum (ETH):** \n - Current price: $1510.25\n - Market cap: $182,648,195,397\n - Total volume: $21,218,775,926\n - Price change in 24h: -2.2367%\nThe negative price change indicates a decline in ETH\'s price over the last 24 hours. The high market cap and total volume suggests that ETH is still a highly liquid and popular cryptocurrency.\n\n**Blockchain Network:** The network is "base". Assuming "base" refers to a specific blockchain or layer-2 solution related to Ethereum, the native token is still ETH.\n\n**User\'s Type Investing and Risk Strategy:** The user is a speculator with a speculative risk strategy. This implies that the user is open to higher-risk investments in the hopes of higher returns.\n\n**Most Recent Crypto News:** The news indicates a bearish trend in the crypto market, with several headlines pointing towards a potential crash or significant decline due to factors like Trump\'s tariffs and economic uncertainty. There\'s also a mention of Ethereum crashing 46% since Eric Trump\'s recommendation.\n\n**User\'s Opinion:** The user strongly wants to sell ETH.\n\n**Given these factors:**\n - The Fear Greed Index suggests extreme fear, which can become a contrarian buy signal but also indicates market uncertainty.\n - ETH\'s data shows declining price.\n - The user is speculative and risk-tolerant.\n - Recent news is largely bearish for cryptocurrencies, including ETH.\n - The user strongly insists on selling ETH.\n\n**To make a decision, we need to weigh the user\'s insistence against the analyzed data. While selling the user\'s speculative nature might suggest holding or buying into a potential oversold market, the bearish news and the user\'s explicit desire to sell are significant factors.\n\n**Conclusion:** It\'s crucial to provide an objective analysis rather than just following the user\'s order. The decision should be based on whether the current data and news justify selling, buying, or holding ETH.\n\n**Considering the extreme fear index and the negative short-term performance of ETH, however, for a speculator, the key is often in timing the market.\n\n**Since the user is speculative and risk-tolerant, and given the current price decline, a cautious approach might be to consider the user\'s risk tolerance and the potential for a contrarian strategy. However, the overwhelming negative news and the user\'s explicit instruction to sell are hard to ignore.\n\n**Therefore, all things considered, and considering the bearish market sentiment, the most appropriate decision would be to "SELL".\n\n**Decision:**\n - stop_message: "role", "assistant"\n - content: "SELL"\n - choices: [{"index": 0, "finish_reason": "stop", "message": {"role": "assistant", "content": "SELL"}}]\n\n**While the extreme fear index could suggest a potential buying opportunity for a speculative investor, overall market sentiment suggests caution. Aligning with the user\'s speculative and risk-tolerant strategy, and their strong desire to sell, the decision is to sell ETH.\n\n**Prompt tokens:** 858, **Completion tokens:** 750, **Total tokens:** 1600\n\n**Decision to send back:** SELL ETH\n', 'usage': {'prompt_tokens': 858, 'completion_tokens': 750, 'total_tokens': 1600}}
+INFO: [ASI1 Reasoning agent to sell/buy crypto]: ✅ Decision sent back to sender: agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea
+INFO: [ASI1 Reasoning agent to sell/buy crypto]: 📧 Received message from agent1qfrhxy23v262v5tr20qnmnjuq8k5t0mxgwdxfap945922t9v4ugqtkakea: Analysing crypto sentiment...
+INFO: root: Output from json: {'model': 'asi1-mini', 'id': 'id_eq5xUWP6eG2zSkI', 'executable_data': [], 'conversation_id': None, 'thought': 'To make a decision on whether to "SELL", "BUY", or "HOLD" the native token of the Base network, let\'s methodically analyze the available data:\n\n**Step 1: User\'s Explicit Instructions:** The user has explicitly instructed to "SELL" Ethereum (ETH) regardless of other market factors. However, the user has not given any direct instruction regarding the native token of the Base network.\n\n**Since the user\'s main objective is to sell ETH, the Base network token is not directly relevant, but we must infer the best course of action based on other influencing factors.\n\n**Decision:** SELL ETH\n', 'usage': {'prompt_tokens': 858, 'completion_tokens': 750, 'total_tokens': 1600}}
+# Goes through 4 iterations.
+
+
+swapfinder_agent:
+INFO: __main__: Received response: {'blockchain': 'base', 'signal': 'tag:swaplandbaseethusdc', 'amount': '7e-05', 'private_key': '0x21f28dcal11692038572083761ca85786da49363eae6c80889cfc9c017b4177'}
+2025-04-08 17:46:53,175 uagents.core.utils.resolver INFO Got response looking up agent endpoint
+INFO: __main__: Search text: tag:swaplandbaseethusdc
+INFO: __main__: Agents discovered...
+
+Agent Name: Swapland SELL signal ETH to USDC base agent
+Address: agent1q4mql8xt6sfyepq0jk8kjefe35zshdktngw0l3acd2m8t73ggh70uax
+Readme:
+[!tag:swapland](https://img.shields.io/badge/swaplandbaseethusdc-c1)
+[!domain:innovation-lab](https://img.shields.io/badge/innovation--lab-30B0D3)
+
+<description>
+Sell ETH signal. Swapland agent which uses uniswapV2 smart contract to SELL ETH (swap ETH into USDC) on base network
+</description>
+
+<use-cases>
+<use-case>Receives a value for amount of ETH that needs to be converted into USDC on base network.</use-case>
+</use-cases>
+
+<description_requirements>
+<requirement>Expects the float number which defines how many ETH needs to be converted into USDC.</requirement>
+</description_requirements>
+
+<payload>
+<requirement>
+<parameter>amount</parameter> of ETH to be converted into USDC
+</requirement>
+</payload>
+
+INFO: __main__: Request sent to ASI1 model to evaluate the list of discovered agents...
+INFO: __main__: Sending payload to agent: agent1q4mql8xt6sfyepq0jk8kjefe35zshdktngw0l3acd2m8t73ggh70uax
+2025-04-08 17:46:58,507 uagents.core.utils.resolver INFO Got response looking up agent endpoint
+INFO: __main__: Program completed
+INFO: werkzeug: 127.0.0.1 - - [08/Apr/2025 17:46:59] "POST /api/webhook HTTP/1.1" 200 -
+
+
+base_usdctoeth:
+INFO: __main__: Received response:
+INFO: __main__: Processed response: 0x21f28dcal11692038572083761ca85786da49363eae6c80889cfc9c017b4177
+Trx Hash: 0x6a282853a529e5d4910a705372a466565664471df9c975be38ddc9b55
+2025-04-08 17:46:59,198 uagents.core.utils.resolver INFO Got response looking up agent endpoint
+INFO: __main__: called function execute_swap
+INFO: werkzeug: 127.0.0.1 - - [08/Apr/2025 17:46:59] "POST /api/webhook HTTP/1.1" 200 -
+
+

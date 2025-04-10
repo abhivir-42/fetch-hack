@@ -5,3 +5,18 @@ docs/cursor-rules.md
 .env.development.local
 .env.test.local
 .env.production.local
+.env.local.example
+
+
+.next
+node_modules
+
+# Ignore log files
+*.log
+uagents_core.log
+
+# Ignore generated data files
+*_data.json
+
+# TypeScript build info
+*.tsbuildinfo

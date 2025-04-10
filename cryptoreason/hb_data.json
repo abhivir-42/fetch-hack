@@ -1,29 +1,29 @@
 [
     {
-        "dateTime": "2025-04-04T16:30:15",
+        "dateTime": "2025-04-08T16:30:15",
         "value": {
             "bpm": 72,
             "confidence": 3
         }
     },
     {
-        "dateTime": "2025-04-04T16:30:10",
+        "dateTime": "2025-04-08T16:30:10",
         "value": {
             "bpm": 74,
             "confidence": 3
         }
     },
     {
-        "dateTime": "2025-04-04T16:30:05",
+        "dateTime": "2025-04-08T16:30:05",
         "value": {
             "bpm": 70,
             "confidence": 2
         }
     },
     {
-        "dateTime": "2025-04-04T16:30:00",
+        "dateTime": "2025-04-08T16:30:00",
         "value": {
-            "bpm": 70,
+            "bpm": 75,
             "confidence": 0
         }
     }
