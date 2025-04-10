@@ -63,6 +63,7 @@ export interface Transaction {
   amount?: string | number;
   price?: number;
   timestamp: number;
+  reasoning?: string;
 }
 
 // API Response Types
