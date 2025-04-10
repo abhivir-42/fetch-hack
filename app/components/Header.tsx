@@ -10,7 +10,8 @@ export default function Header() {
             src="/fetch_fund_logo.png" 
             alt="Fetch Fund Logo" 
             width={40} 
-            height={40} 
+            height={40}
+            priority
           />
           <h1 className="text-xl font-bold text-primary">Fetch Fund</h1>
         </Link>
