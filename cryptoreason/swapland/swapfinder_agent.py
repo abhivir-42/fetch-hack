@@ -53,7 +53,7 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmm"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmm13131"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
@@ -255,7 +255,7 @@ def call_swap(swapaddress : str, metamask_key : str):
        logger.error(f"Error sending data to agent: {e}")
        return jsonify({"error": str(e)}), 500
 
-
+"""
 # Simple agent that just listens on port 5008
 def main():
     # Create a socket to listen on port 5008
@@ -275,8 +275,10 @@ def main():
         print(f"Error: {e}")
     finally:
         server_socket.close()
-
+"""
 if __name__ == "__main__":
     load_dotenv()       # Load environment variables
     init_client()       #Register your agent on Agentverse
-    main()
+    app.run(host="0.0.0.0", port=5008)
+
+    #main()

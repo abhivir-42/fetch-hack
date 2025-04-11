@@ -21,6 +21,7 @@ def handle_unexpected_exception(exc_type, exc_value, exc_traceback):
     logging.error("🔥 Uncaught Exception:", exc_info=(exc_type, exc_value, exc_traceback))
 sys.excepthook = handle_unexpected_exception
 
+load_dotenv()  
 # Ensure API key is loaded
 CMC_API_KEY = os.getenv("CMC_API_KEY")
 if not CMC_API_KEY:

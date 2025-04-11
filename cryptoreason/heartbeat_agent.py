@@ -53,7 +53,7 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmmNewSeedNeeded"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmmNewSeedNeeded13"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """

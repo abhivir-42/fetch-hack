@@ -57,7 +57,7 @@ def init_client():
         #![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
             #domain:domain-of-your-agent
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraifjowie123123123nowkewmmjnkjnhhiugcynnkk"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraifjowie123123123nowkewmmjnkjnhhiugcynnkk13"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
 ![tag:swapland](https://img.shields.io/badge/swaplandbaseusdceth-02)

@@ -13,6 +13,8 @@ from newsapi import NewsApiClient
 from datetime import datetime, timedelta
 
 
+
+load_dotenv() 
 # Ensure API key is loaded
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
