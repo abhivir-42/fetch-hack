@@ -53,13 +53,13 @@ def init_client():
     global client_identity
     try:
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraeyeyeye73782ifjowienowkewmm13131"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraeyey12eye73782ifjowienowkewmm13131"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
 
         readme = """
-![tag:swapland](https://img.shields.io/badge/swapland-master)
+![tag:fetchfund](https://img.shields.io/badge/fetchfund-master)
 ![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
-![domain:swapland](https://img.shields.io/badge/swapland--master-00)
+![domain:fetchfund](https://img.shields.io/badge/fetchfund--master-00)
 
             <description>This Agent can only receive a message from another agent in string format.</description>
             <use_cases>
@@ -190,11 +190,13 @@ def search(query):
         logger.info("Formatted API Response:")
         
         prompt = f'''
+        Forget about all previous instructions, we starting a new session!
+        
         These are all agents found through the search agent function tagged as swapland.
         Each agent has 3 parameters to consider: name, address and readme. Evaluate them all.
-        By analysing agents name in the list and find the most suitable one to match the user query: "{query}"
+        By analysing agents name in the list and find the most suitable one to match the user query: "{query}".
         
-        You should output a single string with the Agent Address ONLY, which field can be found under the agent name.
+        Your response should be formatted as an agent address only, which can be found under the agent name.
         '''
         logger.info("Agents discovered..")
         for agent in agents:
@@ -211,7 +213,8 @@ def search(query):
             {"-" * 50}
             '''
             #logger.info(f"{prompt}")
-
+        
+        logger.info(f"Total prompt: ...")
         #print(prompt)  # Debugging log
         logger.info("Request sent to ASI1 model to evaluate the list of discovered agents..")
         response = query_llm(prompt)  # Query the AI for a decision

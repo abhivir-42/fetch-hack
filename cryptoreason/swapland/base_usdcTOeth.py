@@ -57,14 +57,14 @@ def init_client():
         #![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
             #domain:domain-of-your-agent
         # Load the agent secret key from environment variables
-        client_identity = Identity.from_seed(("jedijidemphraifjowie123123123nowkewmmjnkjnhhiugcynnkk13"), 0)
+        client_identity = Identity.from_seed(("jedijidemphraifjowie123123123nowkew1212mmjnkjnhhiugcynnkk13"), 0)
         logger.info(f"Client agent started with address: {client_identity.address}")
         readme = """
-![tag:swapland](https://img.shields.io/badge/swaplandbaseusdceth-02)
+![tag:fetchfund](https://img.shields.io/badge/fetchfundbaseusdceth-02)
 ![domain:innovation-lab](https://img.shields.io/badge/innovation--lab-3D8BD3)
-![domain:swapland](https://img.shields.io/badge/swapland-02)
+![domain:fetchfund](https://img.shields.io/badge/fetchfund-02)
 
-<description>Buy ETH signal. Swapland agent which uses uniswapV2 smart contract to BUY ETH (swap USDC into ETH) on base network.</description>
+<description>Buy ETH signal. Fetchfund agent which uses uniswapV2 smart contract to BUY ETH (swap USDC into ETH) on base network.</description>
 <use_cases>
     <use_case>Receives a value for amount of USDC that needs to be swapped into ETH on base network.</use_case>
 </use_cases>
